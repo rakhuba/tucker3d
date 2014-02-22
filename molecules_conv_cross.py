@@ -25,7 +25,6 @@ print 'Molecule: %s' % molecule
 print 'Precision: %s' % eps
 
 
-
 ####################### Reading functions ########################
 
 
@@ -129,9 +128,10 @@ print 'Data rounding...'
 #newt = tensor_round(newt, eps)
 mol = tensor_round(mol, eps)
 
+print 'Convolution via cross-conv...'
 start = time.time()
 start_conv = time.time()
-conv = cross_conv(newt, mol, eps, (2,4,4)) # One can vary (r1,r2,r3) for better time performance
+conv = cross_conv(newt, mol, eps, (4,4,4)) # One can vary (r1,r2,r3) for better time performance
 end_conv = time.time()
 print 'Cross-conv Time: %s' % (end_conv - start_conv)
 

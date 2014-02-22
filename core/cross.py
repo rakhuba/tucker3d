@@ -6,6 +6,12 @@ import copy
 from tucker import *
 from convolution import *
 
+#
+#                      !!WARNING!!
+#
+# Very slow version of the Cross3D (will be updated).
+# Use cross_multifun to find a function of tensors in the Tucker format.
+
 def cross(func, M, eps_init, delta_add = 1e-5):
 
 
@@ -64,7 +70,7 @@ def cross(func, M, eps_init, delta_add = 1e-5):
 
         norm = np.linalg.norm(G)
         eps_cross = (np.linalg.norm(GG-G))/norm
-        print 'relative accuracy = %s' % (eps_cross), 'ranks = %s' % r1, r2, r3
+    #print 'relative accuracy = %s' % (eps_cross), 'ranks = %s' % r1, r2, r3
         G_Tucker = tensor(G, eps_init/10)
 
 
@@ -173,7 +179,7 @@ def cross(func, M, eps_init, delta_add = 1e-5):
         GG = np.transpose(GG,[1,2,0])
         GG = np.dot(GG,np.transpose(R3))
 
-    print 'ranks after rounding = %s' % r1, r2, r3
+            #print 'ranks after rounding = %s' % r1, r2, r3
     G_Tucker.n = (M, M, M)
     G_Tucker.U[0] = U1
     G_Tucker.U[1] = U2
@@ -182,6 +188,10 @@ def cross(func, M, eps_init, delta_add = 1e-5):
 
 
     return G_Tucker
+
+
+def mod(X,Y):
+    return int(X/Y), X%Y
 
 
 def round_matrix(A, eps):
