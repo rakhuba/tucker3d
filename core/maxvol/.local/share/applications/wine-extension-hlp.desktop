@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=winhlp32
+MimeType=application/x-wine-extension-hlp;
+Exec=env WINEPREFIX="/Applications/Alan Wake.app/Contents/Resources" wine start /ProgIDOpen hlpfile %f
+NoDisplay=true
+StartupNotify=true

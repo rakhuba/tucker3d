@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ToolBar>
+   <Visible>
+      <Key>help.back</Key>
+      <Key>help.forward</Key>
+      <Key>help.actions</Key>
+      <Key>help.address</Key>
+   </Visible>
+</ToolBar>

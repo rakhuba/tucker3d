@@ -1,0 +1,17 @@
+-- The C compiler identification is Clang 4.2.0
+-- The CXX compiler identification is Clang 4.2.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Found SWIG: /Library/Frameworks/EPD64.framework/Versions/Current/bin/swig (found version "2.0.9") 
+CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
+Please set them or make sure they are set and tested correctly in the CMake files:
+Boost_INCLUDE_DIR
+   used as include directory in directory /private/var/folders/f_/d59rxtns6ks0g3yd0hzcz9480000gn/T/tmpeKZ79X2013-2-18-15-19_instant/instant_module_315ebc21e0fe220e611965734859ae349eef07f9
+
+-- Configuring incomplete, errors occurred!

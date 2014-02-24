@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=wordpad
+MimeType=application/x-wine-extension-wri;
+Exec=env WINEPREFIX="/Applications/Alan Wake.app/Contents/Resources" wine start /ProgIDOpen wrifile %f
+NoDisplay=true
+StartupNotify=true

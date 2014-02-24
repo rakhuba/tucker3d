@@ -1,0 +1,53 @@
+# enstaller configuration file
+# ============================
+#
+# This file contains the default package repositories, and configuration,
+# used by enstaller 4.5.3 for the Python 2.7 environment:
+#
+#   sys.prefix = '/Library/Frameworks/EPD64.framework/Versions/7.3'
+#
+# This file was created by initially running the enpkg command.
+
+
+# The EPD subscriber authentication is required to access the EPD repository.
+# To change this setting, use the 'enpkg --userpass' command which will ask
+# you for your username and password.
+EPD_username = 'ivan@bach.inm.ras.ru'
+
+
+# use_webservice refers to using 'https://api.enthought.com/eggs/',
+# the default is True, i.e. the webservice URL is used for fetching eggs.
+# Uncommenting changes this behaviour, to use the explicit IndexedRepos
+# listed below.
+#use_webservice = False
+
+# The enpkg command is searching for eggs in the list 'IndexedRepos'.
+# When enpkg is searching for an egg, it tries to find it in the order
+# of this list, and selects the first one that matches, ignoring
+# repositories below.  Therefore the order of this list matters.
+#
+# For local repositories, the index file is optional.  Remember that on
+# Windows systems the backslaches in the directory path need to escaped, e.g.:
+# r'file://C:\repository\' or 'file://C:\\repository\\'
+IndexedRepos = [
+#  'https://www.enthought.com/repo/ets/eggs/{SUBDIR}/',
+  'https://www.enthought.com/repo/epd/GPL-eggs/{SUBDIR}/',
+  'https://www.enthought.com/repo/epd/eggs/{SUBDIR}/',
+# The Enthought PyPI build mirror:
+  'http://www.enthought.com/repo/pypi/eggs/{SUBDIR}/',
+]
+
+# Install prefix (enpkg --prefix and --sys-prefix options overwrite this).
+# When this variable is not provided, it will default to the value of
+# sys.prefix (within the current interpreter running enpkg)
+#prefix = '/Library/Frameworks/EPD64.framework/Versions/7.3'
+
+# When running enpkg behind a firewall it might be necessary to use a proxy
+# to access the repositories.  The URL for the proxy can be set here.
+# Note that the enpkg --proxy option will overwrite this setting.
+#proxy = <proxy string>  # e.g. "123.0.1.2:8080"
+
+# Uncommenting the next line will disable application menu item install.
+# This only effects the few packages which install menu items,
+# which as IPython.
+#noapp = True

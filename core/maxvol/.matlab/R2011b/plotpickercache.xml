@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plotpicker version="4.0">
+   <plotaction ID="plot"/>
+   <plotaction ID="Plot as multiple series"/>
+   <plotaction ID="Plot as multiple series vs. first input"/>
+   <plotaction ID="bar"/>
+   <plotaction ID="area"/>
+   <plotaction ID="pie"/>
+   <plotaction ID="hist"/>
+   <plotaction ID="contour"/>
+   <plotaction ID="surf"/>
+   <plotaction ID="mesh"/>
+   <category name="MATLAB Line Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="plot"/>
+      <plotaction ID="Plot as multiple series"/>
+      <plotaction ID="Plot as multiple series vs. first input"/>
+      <plotaction ID="plotyy"/>
+      <plotaction ID="semilogx"/>
+      <plotaction ID="semilogy"/>
+      <plotaction ID="loglog"/>
+      <plotaction ID="area"/>
+      <plotaction ID="errorbar"/>
+      <plotaction ID="plot3"/>
+      <plotaction ID="comet"/>
+   </category>
+   <category name="MATLAB Stem and Stair Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="stem"/>
+      <plotaction ID="stairs"/>
+      <plotaction ID="stem3"/>
+   </category>
+   <category name="MATLAB Bar Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="bar"/>
+      <plotaction ID="barh"/>
+      <plotaction ID="barstacked"/>
+      <plotaction ID="barhstacked"/>
+      <plotaction ID="hist"/>
+      <plotaction ID="pareto"/>
+      <plotaction ID="plotmatrix"/>
+   </category>
+   <category name="MATLAB Scatter Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="scatter"/>
+      <plotaction ID="scatter3"/>
+      <plotaction ID="spy"/>
+      <plotaction ID="plotmatrix"/>
+   </category>
+   <category name="MATLAB Pie Charts" prodid="MATLAB" version="1.0">
+      <plotaction ID="pie"/>
+      <plotaction ID="pie3"/>
+   </category>
+   <category name="MATLAB Histograms" prodid="MATLAB" version="1.0">
+      <plotaction ID="hist"/>
+      <plotaction ID="rose"/>
+   </category>
+   <category name="MATLAB Polar Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="polar"/>
+      <plotaction ID="rose"/>
+      <plotaction ID="compass"/>
+   </category>
+   <category name="MATLAB Contour Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="contour"/>
+      <plotaction ID="contourf"/>
+      <plotaction ID="contour3"/>
+   </category>
+   <category name="MATLAB Image Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="image"/>
+      <plotaction ID="imagesc"/>
+      <plotaction ID="pcolor"/>
+   </category>
+   <category name="MATLAB 3D Surfaces" prodid="MATLAB" version="1.0">
+      <plotaction ID="surf"/>
+      <plotaction ID="surfc"/>
+      <plotaction ID="surfl"/>
+      <plotaction ID="mesh"/>
+      <plotaction ID="meshc"/>
+      <plotaction ID="meshz"/>
+      <plotaction ID="waterfall"/>
+      <plotaction ID="ribbon"/>
+      <plotaction ID="contour3"/>
+   </category>
+   <category name="MATLAB Volumetrics" prodid="MATLAB" version="1.0">
+      <plotaction ID="slice"/>
+   </category>
+   <category name="MATLAB Vector Fields" prodid="MATLAB" version="1.0">
+      <plotaction ID="feather"/>
+      <plotaction ID="compass"/>
+      <plotaction ID="quiver"/>
+      <plotaction ID="quiver3"/>
+      <plotaction ID="streamslice"/>
+      <plotaction ID="streamline"/>
+   </category>
+   <category name="MATLAB Analytic Plots" prodid="MATLAB" version="1.0">
+      <plotaction ID="ezplot"/>
+      <plotaction ID="ezplot3"/>
+      <plotaction ID="ezpolar"/>
+      <plotaction ID="ezcontour"/>
+      <plotaction ID="ezcontourf"/>
+      <plotaction ID="ezsurf"/>
+      <plotaction ID="ezsurfc"/>
+      <plotaction ID="ezmesh"/>
+      <plotaction ID="ezmeshc"/>
+   </category>
+   <category name="Control Toolbox Plots" prodid="Control System" version="1.0">
+      <plotaction ID="bodeplot"/>
+      <plotaction ID="nicholsplot"/>
+      <plotaction ID="nyquistplot"/>
+      <plotaction ID="sigmaplot"/>
+      <plotaction ID="rlocusplot"/>
+      <plotaction ID="pzplot"/>
+      <plotaction ID="iopzplot"/>
+      <plotaction ID="stepplot"/>
+      <plotaction ID="impulseplot"/>
+      <plotaction ID="hsvplot"/>
+   </category>
+   <category name="Curve Fitting Toolbox Plots" prodid="Curve Fitting" version="1.0">
+      <plotaction ID="sfitsurface"/>
+      <plotaction ID="sfitpredfunc"/>
+      <plotaction ID="sfitpredobs"/>
+      <plotaction ID="sfitresiduals"/>
+      <plotaction ID="sfitcontour"/>
+      <plotaction ID="cfitfit"/>
+      <plotaction ID="cfitpredfunc"/>
+      <plotaction ID="cfitpredobs"/>
+      <plotaction ID="cfitresiduals"/>
+      <plotaction ID="cfitstresiduals"/>
+      <plotaction ID="cfitderiv1"/>
+      <plotaction ID="cfitderiv2"/>
+      <plotaction ID="cfitintegral"/>
+      <plotaction ID="cftool"/>
+   </category>
+   <category name="Finance Toolbox Plots" prodid="Financial" version="0.0">
+      <plotaction ID="bolling"/>
+      <plotaction ID="highlow"/>
+      <plotaction ID="candle"/>
+      <plotaction ID="kagi"/>
+      <plotaction ID="renko"/>
+      <plotaction ID="movavg"/>
+      <plotaction ID="priceandvol"/>
+      <plotaction ID="pointfig"/>
+      <plotaction ID="volarea"/>
+   </category>
+   <category name="Image Processing Toolbox Plots" prodid="Image Processing" version="2.0">
+      <plotaction ID="imshow"/>
+      <plotaction ID="imtool"/>
+      <plotaction ID="implay"/>
+   </category>
+   <category name="Mapping Toolbox: Projected X-Y Plots" prodid="Mapping" version="0.0">
+      <plotaction ID="mapshow_point"/>
+      <plotaction ID="mapshow_line"/>
+      <plotaction ID="mapshow_poly"/>
+      <plotaction ID="mapshow_S"/>
+      <plotaction ID="mapshow_Symbolspec"/>
+      <plotaction ID="mapshow_texturemap"/>
+      <plotaction ID="mapshow_surface"/>
+      <plotaction ID="mapshow_image"/>
+   </category>
+   <category name="Mapping Toolbox: Geographic Data Plots" prodid="Mapping" version="0.0">
+      <plotaction ID="geoshow_point"/>
+      <plotaction ID="geoshow_line"/>
+      <plotaction ID="geoshow_poly"/>
+      <plotaction ID="geoshow_S"/>
+      <plotaction ID="geoshow_symbolspec"/>
+      <plotaction ID="geoshow_texture"/>
+      <plotaction ID="geoshow_surface"/>
+      <plotaction ID="geoshow_image"/>
+   </category>
+   <category name="Signal Processing Toolbox: Filter Analysis" prodid="Signal Processing" version="0.0">
+      <plotaction ID="fvtool"/>
+      <plotaction ID="fvtoolmag"/>
+      <plotaction ID="fvtoolphase"/>
+      <plotaction ID="fvtoolmagphase"/>
+      <plotaction ID="fvtoolgrpdelay"/>
+      <plotaction ID="fvtoolphdelay"/>
+      <plotaction ID="fvtoolimpulse"/>
+      <plotaction ID="fvtoolstep"/>
+      <plotaction ID="fvtoolpolezero"/>
+      <plotaction ID="fvtoolfiltcoef"/>
+      <plotaction ID="fvtoolfiltinfo"/>
+      <plotaction ID="freqs"/>
+      <plotaction ID="impz"/>
+      <plotaction ID="stepz"/>
+      <plotaction ID="freqz"/>
+      <plotaction ID="grpdelay"/>
+      <plotaction ID="phasedelay"/>
+      <plotaction ID="phasez"/>
+      <plotaction ID="zerophase"/>
+      <plotaction ID="zplane"/>
+   </category>
+   <category name="Signal Processing Toolbox: Window Visualization" prodid="Signal Processing" version="0.0">
+      <plotaction ID="wvtool"/>
+   </category>
+   <category name="Signal Processing Toolbox: Spectral Estimation" prodid="Signal Processing" version="0.0">
+      <plotaction ID="cpsd"/>
+      <plotaction ID="mscohere"/>
+      <plotaction ID="pburg"/>
+      <plotaction ID="pcov"/>
+      <plotaction ID="peig"/>
+      <plotaction ID="periodogram_psd"/>
+      <plotaction ID="periodogram_msp"/>
+      <plotaction ID="pmcov"/>
+      <plotaction ID="pmtm"/>
+      <plotaction ID="pmusic"/>
+      <plotaction ID="pwelch_psd"/>
+      <plotaction ID="pwelch_msp"/>
+      <plotaction ID="pyulear"/>
+      <plotaction ID="spectrogram"/>
+      <plotaction ID="tfestimate"/>
+      <plotaction ID="strips"/>
+   </category>
+   <category name="Statistics Toolbox Plots" prodid="Statistics" version="2.0">
+      <plotaction ID="boxplot"/>
+      <plotaction ID="ecdf"/>
+      <plotaction ID="histfit"/>
+      <plotaction ID="ksdensity"/>
+      <plotaction ID="Normal probability plot"/>
+      <plotaction ID="Weibull probability plot"/>
+      <plotaction ID="qqplot"/>
+      <plotaction ID="gscatter"/>
+      <plotaction ID="hist3"/>
+      <plotaction ID="scatterhist"/>
+      <plotaction ID="gplotmatrix"/>
+      <plotaction ID="parallelcoords"/>
+      <plotaction ID="andrewsplot"/>
+      <plotaction ID="glyphplot"/>
+      <plotaction ID="Faces glyph plot"/>
+      <plotaction ID="controlchart"/>
+      <plotaction ID="dendrogram"/>
+   </category>
+   <category name="System ID: Parametric Model Evaluation" prodid="System Identification" version="0.0">
+      <plotaction ID="n4sid"/>
+      <plotaction ID="arx"/>
+      <plotaction ID="oe"/>
+      <plotaction ID="arxtimeseries"/>
+      <plotaction ID="artimeseries"/>
+   </category>
+   <category name="System ID: Non-Parametric Analysis" prodid="System Identification" version="0.0">
+      <plotaction ID="identspa"/>
+      <plotaction ID="identcra"/>
+      <plotaction ID="iddataplot"/>
+   </category>
+   <category name="System ID: idmodel Model Visualization" prodid="System Identification" version="0.0">
+      <plotaction ID="identbode"/>
+      <plotaction ID="identbodeband"/>
+      <plotaction ID="identstep"/>
+      <plotaction ID="identstepband"/>
+      <plotaction ID="identpzmap"/>
+      <plotaction ID="identpzmapband"/>
+      <plotaction ID="idnlarxplot"/>
+      <plotaction ID="idnlhwplot"/>
+   </category>
+   <category name="System ID: idmodel Model Simulation" prodid="System Identification" version="0.0">
+      <plotaction ID="identsim"/>
+      <plotaction ID="identcompare"/>
+      <plotaction ID="identpredict"/>
+   </category>
+</plotpicker>

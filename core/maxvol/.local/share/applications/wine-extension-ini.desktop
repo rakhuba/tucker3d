@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=notepad
+MimeType=application/x-wine-extension-ini;
+Exec=env WINEPREFIX="/Applications/Alan Wake.app/Contents/Resources" wine start /ProgIDOpen inifile %f
+NoDisplay=true
+StartupNotify=true

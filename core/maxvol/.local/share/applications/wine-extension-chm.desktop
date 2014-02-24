@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=hh
+MimeType=application/x-wine-extension-chm;
+Exec=env WINEPREFIX="/Applications/Alan Wake.app/Contents/Resources" wine start /ProgIDOpen chm.file %f
+NoDisplay=true
+StartupNotify=true
