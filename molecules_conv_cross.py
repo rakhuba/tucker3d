@@ -135,3 +135,23 @@ conv = cross_conv(newt, mol, eps, (4,4,4)) # One can vary (r1,r2,r3) for better 
 end_conv = time.time()
 print 'Cross-conv Time: %s' % (end_conv - start_conv)
 
+mol = expand(mol)
+newt_fft = tensor_fft(newt)
+mol_fft = tensor_fft(mol)
+
+U = np.zeros((M, newt_fft.r[0]*mol_fft.r[0]), dtype=np.complex128)
+for p in xrange(newt_fft.r[0]):
+    for q in xrange(mol_fft.r[0]):
+        U[:, p*mol_fft.r[0] + q] = mol_fft.U[0][:,q]*newt_fft.U[0][:,p]
+
+
+U = np.fft.fft(U, axis = 0)
+[u,s,v] = np.linalg.svd(U, full_matrices = False)
+for i in xrange(newt_fft.r[0]*mol_fft.r[0]):
+    if s[i]/s[0]<1e-2:
+        num = i
+        break
+    else:
+        num = newt_fft.r[0]*mol_fft.r[0]
+
+print num
