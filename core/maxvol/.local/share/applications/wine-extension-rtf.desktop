@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=wordpad
-MimeType=application/x-wine-extension-rtf;
-Exec=env WINEPREFIX="/Applications/Alan Wake.app/Contents/Resources" wine start /ProgIDOpen rtffile %f
-NoDisplay=true
-StartupNotify=true
