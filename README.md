@@ -15,7 +15,7 @@ Tucker format
 Tucker format is a low-parametric representation of multidimensional arrays (tensors).
 This representaion is based on the idea of separation of variables (so-called tensor format).
 
-If a Tucker representation of some tensors is given and it has low number of parameters, then basic linear operations are fast to compute.
+If a Tucker representation of some tensors is given and it has low number of parameters, then basic linear algebra operations are fast to compute.
 
 
 Installation
