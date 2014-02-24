@@ -1,3 +1,7 @@
+#
+# Computing Newton potential of a Slater function
+#
+
 import sys
 sys.path.append('../')
 import numpy as np
@@ -36,6 +40,8 @@ def slater_func((i,j,k)):
 def newton_func((i,j,k)):
     return newton_const * 1./((x[i])**2 + (x[j])**2 + (x[k])**2)**0.5
 
+# Tucker representaition of the slater and newton functions
+
 print 'WARNING!'
 print 'Very slow part (cross approximation of Slater and Newton funs).'
 print 'It does not influence cross-conv time performance.'
@@ -44,6 +50,8 @@ print 'In process...'
 slater = cross(slater_func, N, eps, delta_add = 1e-5)
 newton = cross(newton_func, N, eps, delta_add = 1e-5)
 newton = lr_circulant(newton)
+
+# Convolution part
 
 start = time.time()
 start_conv = time.time()
