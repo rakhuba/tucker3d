@@ -6,16 +6,27 @@ import copy
 from scipy.special import erf
 from tucker import *
 from cross_multifun import cross_multifun
-#from numba.decorators import jit
-#from numba import int32, double
 
-#def lr_newton(f, x, eps, (r1_0, r2_0, r3_0) = (4, 4, 4)):
 
-#    T = newton_galerkin(x, eps)
-#    newton = convolution_cross(T, f, eps, (r1_0, r2_0, r3_0))
-
-#    return newton
+def cross_conv(c_g, f, delta_cross, (r1_0, r2_0, r3_0) = (4, 4, 4)):
+    # convolution of g and f tensors
+    # c_g - generating a circulant subtensor (for symmetric g use lr_circulant func)
     
+    aa = tensor_fft(c_g)
+    bb = tensor_fft(expand(f))
+    
+    ab = cross_multifun([aa, bb], delta_cross, lambda (a,b): a*b, (r1_0, r2_0, r3_0))
+    
+    ab = tensor_ifft(ab)
+    
+    conv = copy.copy(ab)
+    conv.n = [(ab.n[0]+1)/2, (ab.n[1]+1)/2, (ab.n[2]+1)/2]
+    conv.U[0] = ab.U[0][:conv.n[0], :]
+    conv.U[1] = ab.U[1][:conv.n[1], :]
+    conv.U[2] = ab.U[2][:conv.n[2], :]
+    
+    return conv
+
 
 def newton_galerkin(x, eps, ind):
 
@@ -87,27 +98,6 @@ def func_int(x, y, a):
     else:
         f = (-(x-y)**2/2) 
     return f    
-
-
-def cross_conv(c_g, f, delta_cross, (r1_0, r2_0, r3_0) = (4, 4, 4)):
-    # convolution of g and f tensors
-    # c_g - generating a circulant subtensor (for symmetric g use lr_circulant func) 
-
-    aa = tensor_fft(c_g)
-    bb = tensor_fft(expand(f))
-
-    ab = cross_multifun([aa, bb], delta_cross, lambda (a,b): a*b, (r1_0, r2_0, r3_0))
-
-    ab = tensor_ifft(ab)
-
-    conv = copy.copy(ab)
-    conv.n = [(ab.n[0]+1)/2, (ab.n[1]+1)/2, (ab.n[2]+1)/2]
-    conv.U[0] = ab.U[0][:conv.n[0], :]
-    conv.U[1] = ab.U[1][:conv.n[1], :]
-    conv.U[2] = ab.U[2][:conv.n[2], :]
-    
-    return conv
-
 
 
 

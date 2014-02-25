@@ -187,7 +187,7 @@ def cross(func, M, eps_init, delta_add = 1e-5):
     G_Tucker.r = [r1, r2, r3]
 
 
-    return G_Tucker
+    return tensor_round(G_Tucker, eps_init)
 
 
 def mod(X,Y):
@@ -198,21 +198,17 @@ def round_matrix(A, eps):
 
     u, s, v = np.linalg.svd(np.array(A), full_matrices = False)
 
-    N, M = A.shape
-    r = 0 # r=rank
-
-    # rank
-    for i in range(min(N, M)):
-        if s[i]>eps*s[0]:
-            r+=1
-
-    # factors
-    ur = 1j*np.zeros((N, r))
-    vr = 1j*np.zeros((r, M))
-
-    for i in range(r):
-        ur[:,i]=u[:,i].copy()
-        vr[i,:]=v[i,:].copy()
-
-
-    return ur, H(vr), r
+    N1, N2 = A.shape
+    
+    eps_svd = eps*s[0]/np.sqrt(3)
+    r = min(N1, N2)
+    for i in xrange(min(N1, N2)):
+        if s[i] <= eps_svd:
+            r = i
+            break
+    #print s/s[0]
+    u = u[:,:r].copy()
+    v = v[:r,:].copy()
+    s = s[:r].copy()
+    
+    return u, H(v), r
