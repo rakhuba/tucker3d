@@ -4,7 +4,6 @@ from math import pi
 import maxvol as mv
 import copy
 from tucker import *
-from convolution import *
 
 #
 #                      !!WARNING!!
