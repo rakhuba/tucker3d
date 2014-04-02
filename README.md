@@ -1,13 +1,13 @@
 tucker3d (Ver. 0.1)
 ===================
 
-"tucker3d" is Python implementation of the Tucker format in the three-dimensional case.
+tucker3d is Python implementation of the Tucker format in the three-dimensional case.
 This implemetation includes 
 - Basic linear algebra operations
 - New version of the cross approximation method (it allows to construct tucker representation 
 of a tensor by using only few of its elements)
-- Element-wise functions (cross-multifun)
-- 3D convolutions (cross-conv algorithm)
+- Element-wise functions (multifun in the cross module)
+- 3D convolutions (cross-conv algorithm, see http://arxiv.org/pdf/1402.5649.pdf for details)
 
 Tucker format
 =============
