@@ -3,9 +3,9 @@
 #
 
 import sys
-sys.path.append('../')
+sys.path.append('../../')
 import numpy as np
-from core import *
+import tucker3d as tuck
 
 
 
@@ -38,16 +38,16 @@ def gaussian_fun((i,j,k)):
 
 print 'Converting tensors in the Tucker format...'
 print '(significantly faster version to be updated soon)'
-a = cross(slater_fun, N, eps)
-b = cross(gaussian_fun, N, eps)
+a = tuck.cross.cross3d(slater_fun, N, eps)
+b = tuck.cross.cross3d(gaussian_fun, N, eps)
 print 'Converting is done'
 
 print 'tensor a: %s' % (a)
 print 'tensor b: %s' % (b)
 print 'tensor 2a: %s' % (2*a)
 print 'tensor a+a: %s' % (a + a)
-print 'tensor a+a after rounding: %s' % (tensor_round(a+a, eps))
-print 'relative Frobenius norm of a-a: %s' % (tensor_norm(a-a)/tensor_norm(a))
+print 'tensor a+a after rounding: %s' % (tuck.round(a+a, eps))
+print 'relative Frobenius norm of a-a: %s' % (tuck.norm(a-a)/tuck.norm(a))
 
 # Warning! for big mode sizes (N >~ 256) full tensors may be out of memory.
 # So, use tensor_full function carefully.

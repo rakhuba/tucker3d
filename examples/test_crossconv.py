@@ -3,11 +3,12 @@
 #
 
 import sys
-sys.path.append('../')
+sys.path.append('../../')
+
 import numpy as np
 import time
 from math import pi
-from core import *
+import tucker3d as tuck
 import timeit
 
 
@@ -47,15 +48,15 @@ print 'Very slow part (cross approximation of Slater and Newton funs).'
 print 'It does not influence cross-conv time performance.'
 print 'Will be updated soon.'
 print 'In process...'
-slater = cross(slater_func, N, eps, delta_add = 1e-5)
-newton = cross(newton_func, N, eps, delta_add = 1e-5)
-newton = lr_circulant(newton)
+slater = tuck.cross.cross3d(slater_func, N, eps, delta_add = 1e-5)
+newton = tuck.cross.cross3d(newton_func, N, eps, delta_add = 1e-5)
+newton = tuck.cross.toepl2circ(newton)
 
 # Convolution part
 
 start = time.time()
 start_conv = time.time()
-conv = cross_conv(newton, slater, eps, (4,4,4))
+conv = tuck.cross.conv(newton, slater, eps, (4,4,4))
 end_conv = time.time()
 print 'Cross-conv Time: %s' % (end_conv - start_conv)
 

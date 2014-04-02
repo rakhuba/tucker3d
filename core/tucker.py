@@ -8,9 +8,12 @@ def svd(A):
     try:
         return np.linalg.svd(A, full_matrices = False)
     except: #LinAlgError
-        print "SVD failded"
-        return np.linalg.svd(A + 1e-12*np.linalg.norm(A, 1), full_matrices = False)
-
+        try:
+            print "SVD failded"
+            return np.linalg.svd(A + 1e-12*np.linalg.norm(A, 1), full_matrices = False)
+        except:
+            print "SVD failded twice"
+            return np.linalg.svd(A + 1e-8*np.linalg.norm(A, 1), full_matrices = False)
 
 
 
@@ -134,7 +137,7 @@ def can2tuck(g, U1, U2, U3):
     
     return a
 
-def tensor_real(a): # doubled ranks!
+def real(a): # doubled ranks!
 
     b = tensor()
     
@@ -164,7 +167,7 @@ def tensor_real(a): # doubled ranks!
     
     return b
     
-def tensor_full(a, ind = None):
+def full(a, ind = None):
     if ind == None:
         return a.full()
     else:
@@ -179,7 +182,7 @@ def tensor_full(a, ind = None):
         b.n[2] = len(ind[2])
         return b.full()
 
-def tensor_orthog(a):
+def qr(a):
 
     b = tensor()
 
@@ -198,9 +201,9 @@ def tensor_orthog(a):
 
     return b
 
-def tensor_round(a, eps):
+def round(a, eps):
 
-    a = tensor_orthog(a)
+    a = qr(a)
 
     b = tensor()
     b.n = a.n
@@ -213,7 +216,7 @@ def tensor_round(a, eps):
 
     return b
 
-def tensor_conj(a):
+def conj(a):
     b = copy.copy(a)
     b.U[0] = np.conjugate(a.U[0])
     b.U[1] = np.conjugate(a.U[1])
@@ -222,7 +225,7 @@ def tensor_conj(a):
 
     return b
 
-def inner_prod(a, b):
+def dot(a, b):
 
     U0 = np.dot(H(a.U[0]), b.U[0]) # Gram matrices (size ra * rb)
     U1 = np.dot(H(a.U[1]), b.U[1])
@@ -238,10 +241,10 @@ def inner_prod(a, b):
     G = np.conjugate(a.G) * G
     return sum(sum(sum(G)))
 
-def tensor_norm(a): # need correction
-    return np.sqrt(inner_prod(a, a))
+def norm(a): # need correction
+    return np.sqrt(dot(a, a))
 
-def tensor_fft(a):
+def fft(a):
 
     b = tensor()
 
@@ -254,7 +257,7 @@ def tensor_fft(a):
 
     return b
 
-def tensor_ifft(a):
+def ifft(a):
 
     b = tensor()
 
@@ -267,7 +270,7 @@ def tensor_ifft(a):
 
     return b
 
-def tensor_dst(a):
+def dst(a):
     
     b = tensor()
 
@@ -280,7 +283,7 @@ def tensor_dst(a):
 
     return b
 
-def tensor_idst(a):
+def idst(a):
     
     b = tensor()
 
@@ -316,7 +319,7 @@ def H(A):
     return np.transpose(np.conjugate(A))
 
 
-def tensor_ones((n1, n2, n3)):
+def ones((n1, n2, n3)):
     a = tensor()
     
     a.U[0] = np.ones((n1, 1), dtype = np.complex128)
@@ -328,7 +331,7 @@ def tensor_ones((n1, n2, n3)):
     
     return a
 
-def tensor_zeros((n1, n2, n3)):
+def zeros((n1, n2, n3)):
     a = tensor()
     
     a.U[0] = np.zeros((n1, 1), dtype = np.complex128)
