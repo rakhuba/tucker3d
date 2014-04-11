@@ -72,11 +72,11 @@ def cross3d(func, M, eps_init, delta_add = 1e-5):
         G_Tucker = tuck.tensor(G, eps_init/10)
 
 
-        G = G_Tucker.G
+        G = G_Tucker.core
 
-        U1 = np.dot(U1, G_Tucker.U[0])
-        U2 = np.dot(U2, G_Tucker.U[1])
-        U3 = np.dot(U3, G_Tucker.U[2])
+        U1 = np.dot(U1, G_Tucker.u[0])
+        U2 = np.dot(U2, G_Tucker.u[1])
+        U3 = np.dot(U3, G_Tucker.u[2])
 
         (r1, r2, r3) = G_Tucker.r
 
@@ -179,9 +179,9 @@ def cross3d(func, M, eps_init, delta_add = 1e-5):
 
             #print 'ranks after rounding = %s' % r1, r2, r3
     G_Tucker.n = (M, M, M)
-    G_Tucker.U[0] = U1
-    G_Tucker.U[1] = U2
-    G_Tucker.U[2] = U3
+    G_Tucker.u[0] = U1
+    G_Tucker.u[1] = U2
+    G_Tucker.u[2] = U3
     G_Tucker.r = [r1, r2, r3]
 
 

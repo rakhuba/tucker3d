@@ -7,22 +7,22 @@ import tucker3d as tuck
 #from cross_multifun import cross_multifun
 
 
-def conv(c_g, f, delta_cross, (r1_0, r2_0, r3_0) = (4, 4, 4)):
+def conv(c_g, f, delta_cross, r_add = 4, pr = None):
     # convolution of g and f tensors
     # c_g - generating a circulant subtensor (for symmetric g use toepl2circ func)
     
     aa = tuck.fft(c_g)
     bb = tuck.fft(pad(f))
     
-    ab = tuck.cross.multifun([aa, bb], delta_cross, lambda (a,b): a*b, (r1_0, r2_0, r3_0))
+    ab = tuck.cross.multifun([aa, bb], delta_cross, lambda (a,b): a*b, r_add = r_add, pr = pr)
     
     ab = tuck.ifft(ab)
     
     conv = copy.copy(ab)
     conv.n = [(ab.n[0]+1)/2, (ab.n[1]+1)/2, (ab.n[2]+1)/2]
-    conv.U[0] = ab.U[0][:conv.n[0], :]
-    conv.U[1] = ab.U[1][:conv.n[1], :]
-    conv.U[2] = ab.U[2][:conv.n[2], :]
+    conv.u[0] = ab.u[0][:conv.n[0], :]
+    conv.u[1] = ab.u[1][:conv.n[1], :]
+    conv.u[2] = ab.u[2][:conv.n[2], :]
     
     return conv
 
@@ -78,13 +78,13 @@ def toepl2circ(T):
 
     C = pad(T)
 
-    U1 = T.U[0][1:, :]
-    U2 = T.U[1][1:, :]
-    U3 = T.U[2][1:, :]
+    U1 = T.u[0][1:, :]
+    U2 = T.u[1][1:, :]
+    U3 = T.u[2][1:, :]
     
-    C.U[0][T.n[0] :, :] = U1[::-1, :]
-    C.U[1][T.n[1] :, :] = U2[::-1, :]
-    C.U[2][T.n[2] :, :] = U3[::-1, :]
+    C.u[0][T.n[0] :, :] = U1[::-1, :]
+    C.u[1][T.n[1] :, :] = U2[::-1, :]
+    C.u[2][T.n[2] :, :] = U3[::-1, :]
 
     return C
 
@@ -104,12 +104,12 @@ def pad(a):
     b = tuck.tensor()
     b.n = [2*a.n[0] -1, 2*a.n[1] -1, 2*a.n[2] -1]
     b.r = a.r
-    b.U[0] = np.zeros((b.n[0], b.r[0]), dtype=np.complex128)
-    b.U[1] = np.zeros((b.n[1], b.r[1]), dtype=np.complex128)
-    b.U[2] = np.zeros((b.n[2], b.r[2]), dtype=np.complex128)
-    b.U[0][:a.n[0], :] = a.U[0]
-    b.U[1][:a.n[1], :] = a.U[1]
-    b.U[2][:a.n[2], :] = a.U[2] 
-    b.G = a.G
+    b.u[0] = np.zeros((b.n[0], b.r[0]), dtype=np.complex128)
+    b.u[1] = np.zeros((b.n[1], b.r[1]), dtype=np.complex128)
+    b.u[2] = np.zeros((b.n[2], b.r[2]), dtype=np.complex128)
+    b.u[0][:a.n[0], :] = a.u[0]
+    b.u[1][:a.n[1], :] = a.u[1]
+    b.u[2][:a.n[2], :] = a.u[2] 
+    b.core = a.core
 
     return b

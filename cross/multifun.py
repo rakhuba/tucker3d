@@ -40,11 +40,11 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
 ############################################################
 ############################################################
 
-        Q1, R = np.linalg.qr(y0.U[0]);
+        Q1, R = np.linalg.qr(y0.u[0]);
         row_order_U1 = np.sort(tuck.mv.maxvol(Q1));
-        Q2, R = np.linalg.qr(y0.U[1]);
+        Q2, R = np.linalg.qr(y0.u[1]);
         row_order_U2 = np.sort(tuck.mv.maxvol(Q2));
-        Q3, R = np.linalg.qr(y0.U[2]);
+        Q3, R = np.linalg.qr(y0.u[2]);
         row_order_U3 = np.sort(tuck.mv.maxvol(Q3));
 
         r0 = [len(row_order_U1), len(row_order_U2), len(row_order_U3)]
@@ -52,9 +52,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         A = [None]*d
 
         for alpha in xrange(d):
-            A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].U[1][row_order_U2,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[0][row_order_U1,:]))
+            A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].u[1][row_order_U2,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[0][row_order_U1,:]))
             A[alpha] = np.transpose(A[alpha], [2,1,0])
         Ar = fun(A)
 
@@ -83,9 +83,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         for i in xrange(r0[0]):
             for alpha in xrange(d):
                 k1_order, j1_order = mod(column_order_U1[i], r0[1])
-                A[alpha] = np.dot(X[alpha].G,np.transpose(X[alpha].U[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].U[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[0]))
+                A[alpha] = np.dot(X[alpha].core,np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[0]))
                 A[alpha] = np.transpose(A[alpha], [2,1,0])[:, 0, 0]
             u1[:,i] = fun(A)
 
@@ -94,9 +94,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         for j in xrange(r0[1]):
             for alpha in xrange(d):
                 k1_order, i1_order = mod(column_order_U2[j], r0[0])
-                A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]),np.transpose(X[alpha].U[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[1]))
+                A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1]))
                 A[alpha] = np.transpose(A[alpha], [1,2,0])[0, :, 0]
             u2[:,j] = fun(A)
 
@@ -105,9 +105,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         for k in xrange(r0[2]):
             for alpha in xrange(d):
                 j1_order, i1_order = mod(column_order_U3[k], r0[0])
-                A[alpha] = np.dot(np.transpose(X[alpha].G, [2,1,0]),np.transpose(X[alpha].U[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]),np.transpose(X[alpha].U[2]))[0,0,:]
+                A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]),np.transpose(X[alpha].u[2]))[0,0,:]
             u3[:,k] = fun(A)
 
 
@@ -143,9 +143,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         A = [None]*d
 
         for alpha in xrange(d):
-            A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].U[1][row_order_U2,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[0][row_order_U1,:]))
+            A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].u[1][row_order_U2,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[0][row_order_U1,:]))
             A[alpha] = np.transpose(A[alpha], [2,1,0])
         Ar = fun(A)
 
@@ -197,9 +197,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     for ii in xrange(r0[0]):
         for alpha in xrange(d):
             k1_order, j1_order = mod(column_order_U1[ii], r0[1])
-            A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].U[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[0][ind_update_1, :]))
+            A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[0][ind_update_1, :]))
             A[alpha] = np.transpose(A[alpha], [2,1,0])[:,0,0]
         A1_12[ii,:] = fun(A)
 
@@ -208,9 +208,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     for ii in xrange(r0[1]):
         for alpha in xrange(d):
             k1_order, i1_order = mod(column_order_U2[ii], r0[0])
-            A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].U[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[1][ind_update_2, :]))
+            A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[1][ind_update_2, :]))
             A[alpha] = np.transpose(A[alpha], [1,2,0])[0,:,0]
         A2_12[ii, :] = fun(A)
 
@@ -219,9 +219,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     for ii in xrange(r0[2]):
         for alpha in xrange(d):
             j1_order, i1_order = mod(column_order_U3[ii], r0[0])
-            A[alpha] = np.dot(np.transpose(X[alpha].G, [2,1,0]),np.transpose(X[alpha].U[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]),np.transpose(X[alpha].U[2][ind_update_3, :]))[0,0,:]
+            A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]),np.transpose(X[alpha].u[2][ind_update_3, :]))[0,0,:]
         A3_12[ii, :] = fun(A)
 
 
@@ -234,26 +234,26 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     while True:
         
         for alpha in xrange(d):
-            A[alpha] = np.dot(np.transpose(X[alpha].G, [2,1,0]), np.transpose(X[alpha].U[0][ind_update_1,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[1][row_order_U2,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]), np.transpose(X[alpha].U[2][row_order_U3,:]))
+            A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]), np.transpose(X[alpha].u[0][ind_update_1,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[1][row_order_U2,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]), np.transpose(X[alpha].u[2][row_order_U3,:]))
         Ar_1 = np.concatenate((Ar, fun(A)), 0)
         
         row_order_U1 = np.concatenate((row_order_U1, ind_update_1))
         
         for alpha in xrange(d):
-            A[alpha] = np.dot(np.transpose(X[alpha].G, [0,2,1]), np.transpose(X[alpha].U[1][ind_update_2,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[2][row_order_U3,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].U[0][row_order_U1,:]))
+            A[alpha] = np.dot(np.transpose(X[alpha].core, [0,2,1]), np.transpose(X[alpha].u[1][ind_update_2,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[2][row_order_U3,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].u[0][row_order_U1,:]))
             A[alpha] = np.transpose(A[alpha], [2,1,0])
         Ar_2 = np.concatenate((Ar_1, fun(A)), 1)
         
         row_order_U2 = np.concatenate((row_order_U2, ind_update_2))
         
         for alpha in xrange(d):
-            A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][ind_update_3,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].U[1][row_order_U2,:]))
-            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[0][row_order_U1,:]))
+            A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][ind_update_3,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].u[1][row_order_U2,:]))
+            A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[0][row_order_U1,:]))
             A[alpha] = np.transpose(A[alpha], [2,1,0])
         Ar = np.concatenate((Ar_2, fun(A)), 2)
         
@@ -283,9 +283,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         for i in xrange(r_add[0]):
             for alpha in xrange(d):
                 k1_order, j1_order = mod(column_order_update_U1[i], r[1])
-                A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].U[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[0]))
+                A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[0]))
                 A[alpha] = np.transpose(A[alpha], [2,1,0])[:,0,0]
             u1[:,i] = fun(A)
             
@@ -301,9 +301,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         for j in xrange(r_add[1]):
             for alpha in xrange(d):
                 k1_order, i1_order = mod(column_order_update_U2[j], r[0])
-                A[alpha] = np.dot(X[alpha].G, np.transpose(X[alpha].U[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].U[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].U[1]))
+                A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[1]))
                 A[alpha] = np.transpose(A[alpha], [1,2,0])[0,:,0]
             u2[:,j] = fun(A)
             
@@ -317,9 +317,9 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         for k in xrange(r_add[2]):
             for alpha in xrange(d):
                 j1_order, i1_order = mod(column_order_update_U3[k], r[0])
-                A[alpha] = np.dot(np.transpose(X[alpha].G, [2,1,0]),np.transpose(X[alpha].U[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].U[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
-                A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]),np.transpose(X[alpha].U[2]))[0,0,:]
+                A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
+                A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]),np.transpose(X[alpha].u[2]))[0,0,:]
             u3[:,k] = fun(A)
             
             u3_approx_k = np.dot(np.transpose(Ar,[2,1,0]),np.transpose(UU1[row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
@@ -385,10 +385,10 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     
     
     fun = tuck.tensor()
-    fun.G = G_Tucker.G
-    fun.U[0] = np.dot(U1, G_Tucker.U[0])
-    fun.U[1] = np.dot(U2, G_Tucker.U[1])
-    fun.U[2] = np.dot(U3, G_Tucker.U[2])
+    fun.core = G_Tucker.core
+    fun.u[0] = np.dot(U1, G_Tucker.u[0])
+    fun.u[1] = np.dot(U2, G_Tucker.u[1])
+    fun.u[2] = np.dot(U3, G_Tucker.u[2])
     fun.r =  G_Tucker.r
     fun.n = n
 

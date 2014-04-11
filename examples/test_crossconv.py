@@ -56,7 +56,7 @@ newton = tuck.cross.toepl2circ(newton)
 
 start = time.time()
 start_conv = time.time()
-conv = tuck.cross.conv(newton, slater, eps, (4,4,4))
+conv = tuck.cross.conv(newton, slater, eps)
 end_conv = time.time()
 print 'Cross-conv Time: %s' % (end_conv - start_conv)
 
