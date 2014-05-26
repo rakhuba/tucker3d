@@ -6,6 +6,17 @@ from scipy.special import erf
 import tucker3d as tuck
 
 
+def pinv(A):
+    try:
+        return np.linalg.pinv(A)
+    except: #LinAlgError
+        try:
+            print "PINV failded"
+            return np.linalg.pinv(A + 1e-12*np.linalg.norm(A, 1))
+        except:
+            print "PINV failded twice"
+            return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
+
 
 
 def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
@@ -403,7 +414,7 @@ def schur_comp(A, A11, A12):
     #print np.linalg.solve(A11.T, A[:,:r].T).T
     S_hat = np.zeros((R,r0), dtype=np.complex128)
     
-    S_hat[:r, :] = np.dot(np.linalg.pinv(A11), -A12)#np.linalg.solve(A11, -A12)
+    S_hat[:r, :] = np.dot(pinv(A11), -A12)#np.linalg.solve(A11, -A12)
     S_hat[r:, :] = np.identity(r0)
     
     #print A[:,:]
@@ -445,7 +456,7 @@ def column_update(UU, u, ind):
     S = u - np.dot(UU, u[ind,:])
     ind_add = tuck.mv.maxvol(S)
     
-    SS = np.dot(np.linalg.pinv(S[ind_add, :].T), S.T).T # WARNING! pinv instead of solve!
+    SS = np.dot(pinv(S[ind_add, :].T), S.T).T # WARNING! pinv instead of solve!
     #np.linalg.solve(S[ind_add, :].T, S.T).T#np.dot(np.linalg.pinv(S[ind_add, :].T), S.T).T
     
     U1 = UU - np.dot(SS, UU[ind_add])
