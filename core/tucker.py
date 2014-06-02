@@ -252,6 +252,7 @@ def fft(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
+
     try:
         b.u[0] = mkl_fft1d(a.u[0])
         b.u[1] = mkl_fft1d(a.u[1])
@@ -263,6 +264,8 @@ def fft(a):
         b.u[1] = np.fft.fft(a[1], axis = 0)
         b.u[2] = np.fft.fft(a[2], axis = 0)
 
+
+
     return b
 
 def ifft(a):
@@ -272,6 +275,7 @@ def ifft(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
+
     try:
         b.u[0] = mkl_ifft1d(a.u[0])
         b.u[1] = mkl_ifft1d(a.u[1])
@@ -282,6 +286,8 @@ def ifft(a):
         b.u[0] = np.fft.ifft(a[0], axis = 0)
         b.u[1] = np.fft.ifft(a[1], axis = 0)
         b.u[2] = np.fft.ifft(a[2], axis = 0)
+
+
 
     return b
 
