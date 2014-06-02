@@ -253,12 +253,10 @@ def fft(a):
     b.r = a.r
     b.n = a.n
     try:
-        for d in xrange(3):
-            u = np.zeros((a.n[d],a.r[d]),dtype = np.complex128)
-            for i in xrange(a.r[d]):
-                u[:,i] = mkl_fft.fft(a.u[d][:,i]+0j)
-            b.u[d] = u
-    #print np.linalg.norm(u-np.fft.fft(a.u[0], axis = 0))
+        b.u[0] = mkl_fft1d(a.u[0])
+        b.u[1] = mkl_fft1d(a.u[1])
+        b.u[2] = mkl_fft1d(a.u[2])
+
     except:
         print 'Standard np.fft.fft operation. May be slow if it is not from mkl'
         b.u[0] = np.fft.fft(a[0], axis = 0)
@@ -275,11 +273,10 @@ def ifft(a):
     b.r = a.r
     b.n = a.n
     try:
-        for d in xrange(3):
-            u = np.zeros((a.n[d],a.r[d]),dtype = np.complex128)
-            for i in xrange(a.r[d]):
-                u[:,i] = mkl_fft.ifft(a.u[d][:,i]+0j)/a.n[d]
-            b.u[d] = u
+        b.u[0] = mkl_ifft1d(a.u[0])
+        b.u[1] = mkl_ifft1d(a.u[1])
+        b.u[2] = mkl_ifft1d(a.u[2])
+    
     except:
         print 'Standard np.fft.fft operation. May be slow if it is not from mkl'
         b.u[0] = np.fft.ifft(a[0], axis = 0)
@@ -370,7 +367,7 @@ def dst1D(A):
     X = np.zeros(new_size, dtype = np.complex128)
 
     X[1: n[0] + 1, :] = A
-    X = np.imag(np.fft.fft(X, axis = 0))
+    X = np.imag(mkl_fft1d(X))
     return -X[1: n[0] + 1, :] * np.sqrt(2./(n[0] + 1))
 
 def idst1D(A):
@@ -381,7 +378,7 @@ def idst1D(A):
     X = np.zeros(new_size, dtype = np.complex128)
 
     X[1: n[0] + 1, :] = A
-    X = (2*(n[0]+1))* np.imag(np.fft.ifft(X, axis = 0))
+    X = (2*(n[0]+1))* np.imag(mkl_ifft1d(X))
     return X[1: n[0] + 1, :] * np.sqrt(2./(n[0] + 1))
 
 def dst3D(A):
@@ -392,3 +389,26 @@ def dst3D(A):
     X = np.transpose(X, [1, 0, 2])
 
     return X
+
+def mkl_fft1d(a):
+    
+    n,m = a.shape
+    b = np.zeros((n,m),dtype=np.complex128)
+    for i in xrange(m):
+        b[:,i] = mkl_fft.fft(a[:,i]+0j)
+    return b
+
+def mkl_ifft1d(a):
+    
+    n,m = a.shape
+    b = np.zeros((n,m),dtype=np.complex128)
+    for i in xrange(m):
+        b[:,i] = mkl_fft.ifft(a[:,i]+0j)/n
+    return b
+
+
+
+
+
+
+
