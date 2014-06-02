@@ -3,6 +3,7 @@ import time
 from math import pi
 import maxvol as mv
 import copy
+import mkl_fft
 
 def svd(A):
     try:
@@ -251,9 +252,18 @@ def fft(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
-    b.u[0] = np.fft.fft(a[0], axis = 0)
-    b.u[1] = np.fft.fft(a[1], axis = 0)
-    b.u[2] = np.fft.fft(a[2], axis = 0)
+    try:
+        for d in xrange(3):
+            u = np.zeros((a.n[d],a.r[d]),dtype = np.complex128)
+            for i in xrange(a.r[d]):
+                u[:,i] = mkl_fft.fft(a.u[d][:,i]+0j)
+            b.u[d] = u
+    #print np.linalg.norm(u-np.fft.fft(a.u[0], axis = 0))
+    except:
+        print 'Standard np.fft.fft operation. May be slow if it is not from mkl'
+        b.u[0] = np.fft.fft(a[0], axis = 0)
+        b.u[1] = np.fft.fft(a[1], axis = 0)
+        b.u[2] = np.fft.fft(a[2], axis = 0)
 
     return b
 
@@ -264,9 +274,17 @@ def ifft(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
-    b.u[0] = np.fft.ifft(a[0], axis = 0)
-    b.u[1] = np.fft.ifft(a[1], axis = 0)
-    b.u[2] = np.fft.ifft(a[2], axis = 0)
+    try:
+        for d in xrange(3):
+            u = np.zeros((a.n[d],a.r[d]),dtype = np.complex128)
+            for i in xrange(a.r[d]):
+                u[:,i] = mkl_fft.ifft(a.u[d][:,i]+0j)/a.n[d]
+            b.u[d] = u
+    except:
+        print 'Standard np.fft.fft operation. May be slow if it is not from mkl'
+        b.u[0] = np.fft.ifft(a[0], axis = 0)
+        b.u[1] = np.fft.ifft(a[1], axis = 0)
+        b.u[2] = np.fft.ifft(a[2], axis = 0)
 
     return b
 
