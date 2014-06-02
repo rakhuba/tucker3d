@@ -252,6 +252,7 @@ def fft(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
+
     try:
         for d in xrange(3):
             u = np.zeros((a.n[d],a.r[d]),dtype = np.complex128)
@@ -265,6 +266,8 @@ def fft(a):
         b.u[1] = np.fft.fft(a[1], axis = 0)
         b.u[2] = np.fft.fft(a[2], axis = 0)
 
+
+
     return b
 
 def ifft(a):
@@ -274,6 +277,7 @@ def ifft(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
+
     try:
         for d in xrange(3):
             u = np.zeros((a.n[d],a.r[d]),dtype = np.complex128)
@@ -285,6 +289,8 @@ def ifft(a):
         b.u[0] = np.fft.ifft(a[0], axis = 0)
         b.u[1] = np.fft.ifft(a[1], axis = 0)
         b.u[2] = np.fft.ifft(a[2], axis = 0)
+
+
 
     return b
 
