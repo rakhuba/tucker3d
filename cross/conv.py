@@ -7,14 +7,14 @@ import tucker3d as tuck
 #from cross_multifun import cross_multifun
 
 
-def conv(c_g, f, delta_cross, r_add = 4, pr = None):
+def conv(c_g, f, delta_cross, r_add = 4, pr = None, y0 = None):
     # convolution of g and f tensors
     # c_g - generating a circulant subtensor (for symmetric g use toepl2circ func)
     
     aa = tuck.fft(c_g)
     bb = tuck.fft(pad(f))
     
-    ab = tuck.cross.multifun([aa, bb], delta_cross, lambda (a,b): a*b, r_add = r_add, pr = pr)
+    ab = tuck.cross.multifun([aa, bb], delta_cross, lambda (a,b): a*b, r_add = r_add, pr = pr, y0 = y0)
     
     ab = tuck.ifft(ab)
     
