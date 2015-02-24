@@ -10,7 +10,7 @@ import tucker3d as tuck
 def conv(c_g, f, delta_cross, r_add = 4, pr = None, y0 = None):
     # convolution of g and f tensors
     # c_g - generating a circulant subtensor (for symmetric g use toepl2circ func)
-    
+
     aa = tuck.fft(c_g)
     bb = tuck.fft(pad(f))
     
