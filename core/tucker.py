@@ -39,11 +39,11 @@ class tensor:
         U2, V2, r2 = svd_trunc(B2, eps)
         U3, V3, r3 = svd_trunc(B3, eps)
 
-        G = np.dot(A, np.conjugate(U3))
+        G = np.tensordot(A, np.conjugate(U3), (2,0))
         G = np.transpose(G, [2, 0, 1])
-        G = np.dot(G, np.conjugate(U2))
+        G = np.tensordot(G, np.conjugate(U2), (2,0))
         G = np.transpose(G, [0, 2, 1])
-        G = np.dot(G, np.conjugate(U1))
+        G = np.tensordot(G, np.conjugate(U1), (2,0))
         G = np.transpose(G, [2, 1, 0])
 
         self.n = [N1, N2, N3]
@@ -103,11 +103,11 @@ class tensor:
                 
     def full(self):
 
-        A = np.dot(self.core, np.transpose(self.u[2]))
+        A = np.tensordot(self.core, np.transpose(self.u[2]), (2,0))
         A = np.transpose(A, [2,0,1])
-        A = np.dot(A, np.transpose(self.u[1]))
+        A = np.tensordot(A, np.transpose(self.u[1]), (2,0))
         A = np.transpose(A, [0,2,1])
-        A = np.dot(A, np.transpose(self.u[0]))
+        A = np.tensordot(A, np.transpose(self.u[0]), (2,0))
         A = np.transpose(A, [2,1,0])
 
         return A
@@ -159,10 +159,10 @@ def real(a): # doubled ranks!
     R3[a.r[2]:, :] = 1j*np.identity(a.r[2])
     
     
-    GG = np.dot(np.transpose(a.core,[2,1,0]),np.transpose(R1))
-    GG = np.dot(np.transpose(GG,[0,2,1]),np.transpose(R2))
+    GG = np.tensordot(np.transpose(a.core,[2,1,0]),np.transpose(R1), (2,0))
+    GG = np.tensordot(np.transpose(GG,[0,2,1]),np.transpose(R2), (2,0))
     GG = np.transpose(GG,[1,2,0])
-    b.core = np.real(np.dot(GG,np.transpose(R3)))
+    b.core = np.real(np.tensordot(GG,np.transpose(R3), (2,0)))
 
     b.r = b.core.shape
     
@@ -195,10 +195,10 @@ def qr(a):
     b.u[1], R2 = np.linalg.qr(a.u[1])
     b.u[2], R3 = np.linalg.qr(a.u[2])
 
-    GG = np.dot(np.transpose(a.core,[2,1,0]),np.transpose(R1))
-    GG = np.dot(np.transpose(GG,[0,2,1]),np.transpose(R2))
+    GG = np.tensordot(np.transpose(a.core,[2,1,0]),np.transpose(R1), (2,0))
+    GG = np.tensordot(np.transpose(GG,[0,2,1]),np.transpose(R2), (2,0))
     GG = np.transpose(GG,[1,2,0])
-    b.core = np.dot(GG,np.transpose(R3))
+    b.core = np.tensordot(GG,np.transpose(R3), (2,0))
 
     return b
 
@@ -232,11 +232,11 @@ def dot(a, b):
     U1 = np.dot(H(a.u[1]), b.u[1])
     U2 = np.dot(H(a.u[2]), b.u[2])
 
-    G = np.dot(b.core, U2.T) # b0 b1 a2
+    G = np.tensordot(b.core, U2.T, (2,0)) # b0 b1 a2
     G = np.transpose(G, [0, 2, 1]) # b0 a2 b1
-    G = np.dot(G, U1.T) # b0 a2 a1
+    G = np.tensordot(G, U1.T, (2,0)) # b0 a2 a1
     G = np.transpose(G, [2, 1, 0]) # a1 a2 b0
-    G = np.dot(G, U0.T) # a1 a2 a0
+    G = np.tensordot(G, U0.T, (2,0)) # a1 a2 a0
     G = np.transpose(G, [2, 0, 1])
 
     G = np.conjugate(a.core) * G
