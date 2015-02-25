@@ -2,6 +2,17 @@ import numpy as np
 import copy
 import tucker3d as tuck
 
+def pinv(A):
+    try:
+        return np.linalg.pinv(A)
+    except: #LinAlgError
+        try:
+            print "PINV failded"
+            return np.linalg.pinv(A + 1e-12*np.linalg.norm(A, 1))
+        except:
+            print "PINV failded twice"
+            return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
+
 def cross2d_full(func, eps, r0 = 4):
     
     
@@ -126,7 +137,9 @@ def column_update(UU, u, ind):
     
     S = u - np.dot(UU, u[ind,:])
     ind_add = tuck.mv.maxvol(S)
-    SS = np.linalg.solve(S[ind_add, :].T, S.T).T
+    
+    SS = np.dot(pinv(S[ind_add, :].T), S.T).T # WARNING! pinv instead of solve!
+    #np.linalg.solve(S[ind_add, :].T, S.T).T#np.dot(np.linalg.pinv(S[ind_add, :].T), S.T).T
     
     U1 = UU - np.dot(SS, UU[ind_add])
     U2 = SS
