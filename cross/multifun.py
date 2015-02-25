@@ -18,7 +18,8 @@ def pinv(A):
             return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
 
 
-
+#from numba import autojit
+#@autojit
 def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     
     # For X = [X_1,...,X_d], where X_i - tensors in the Tucker format
