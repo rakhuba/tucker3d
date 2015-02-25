@@ -2,7 +2,7 @@ import numpy as np
 import copy
 import tucker3d as tuck
 
-def cross_2D_eps(func, eps, r0 = 4):
+def cross2d_full(func, eps, r0 = 4):
     
     
     #A = np.zeros((M1, M2), dtype = np.complex128)
