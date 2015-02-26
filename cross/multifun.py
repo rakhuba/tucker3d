@@ -48,7 +48,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     N = int((min(n)+1)/2)
 
     # Type check
-    list = [X[i].u[0] for i in xrange(len(X))]
+    list = [X[i].u[0][0,0] for i in xrange(len(X))]
     if type(np.sum(list)) is np.complex128:
         dtype = np.complex128
     else:
