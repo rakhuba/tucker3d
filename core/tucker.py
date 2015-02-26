@@ -78,7 +78,7 @@ class tensor:
         c.u[1] = np.concatenate((self.u[1], other.u[1]), axis = 1)
         c.u[2] = np.concatenate((self.u[2], other.u[2]), axis = 1)
         
-        if type(self.core[0,0,0]*self.other[0,0,0]*self.u[0][0,0]*other.u[0][0,0]) is np.complex128:
+        if type(self.core[0,0,0]*other[0,0,0]*self.u[0][0,0]*other.u[0][0,0]) is np.complex128:
             dtype = np.complex128
         else:
             dtype = np.float64
