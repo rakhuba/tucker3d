@@ -20,7 +20,7 @@ def pinv(A):
 
 #from numba import autojit
 #@autojit
-def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
+def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     
     # For X = [X_1,...,X_d], where X_i - tensors in the Tucker format
     # cross_func computes y = func(X) == func(x_1,...,x_d) in the Tucker format by using cross3d
@@ -48,7 +48,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     N = int((min(n)+1)/2)
 
     # Type check
-    list = [X[i].u[0][0,0] for i in xrange(len(X))]
+    list = [X[i].u[0] for i in xrange(len(X))]
     if type(np.sum(list)) is np.complex128:
         dtype = np.complex128
     else:
@@ -362,7 +362,10 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         
         if eps_cross < delta_cross:
             break
-        
+        elif r[0]>rmax:
+            print 'Rank has exceeded rmax value'
+            break
+
         #print np.linalg.norm( full(G, U1, U2, U3) - C_toch )/np.linalg.norm(C_toch)
         
         

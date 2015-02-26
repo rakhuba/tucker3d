@@ -13,7 +13,7 @@ def pinv(A):
             print "PINV failded twice"
             return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
 
-def cross2d_full(func, eps, r0 = 4):
+def cross2d_full(func, eps, r0 = 4, rmax = 100):
     
     
     #A = np.zeros((M1, M2), dtype = np.complex128)
@@ -86,6 +86,9 @@ def cross2d_full(func, eps, r0 = 4):
         #print eps_cross, np.linalg.norm(A_appr - func)/np.linalg.norm(func)
         
         if eps_cross < eps:
+            break
+        if r1>rmax:
+            print 'Rank has exceeded rmax value'
             break
         
         
