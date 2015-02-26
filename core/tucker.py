@@ -130,7 +130,10 @@ def can2tuck(g, U1, U2, U3):
         raise Exception("Wrong factor sizes")
     
     r = r1
-    G = np.zeros((r, r, r), dtype = np.complex128)
+    if type(g[0]) is np.complex128:
+        G = np.zeros((r, r, r), dtype = np.complex128)
+    else:
+        G = np.zeros((r, r, r), dtype = np.float64)
     for i in xrange(r):
         G[i, i, i] = g[i]
 
@@ -304,9 +307,15 @@ def dst(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
-    b.u[0] = dst1D(np.real(a[0])) + 1j * dst1D(np.imag(a[0]))
-    b.u[1] = dst1D(np.real(a[1])) + 1j * dst1D(np.imag(a[1]))
-    b.u[2] = dst1D(np.real(a[2])) + 1j * dst1D(np.imag(a[2]))
+    if type(np.imag(a[0][0,0])) is np.complex128:
+        b.u[0] = dst1D(np.real(a[0])) + 1j * dst1D(np.imag(a[0]))
+        b.u[1] = dst1D(np.real(a[1])) + 1j * dst1D(np.imag(a[1]))
+        b.u[2] = dst1D(np.real(a[2])) + 1j * dst1D(np.imag(a[2]))
+    
+    else:
+        b.u[0] = dst1D(np.real(a[0]))
+        b.u[1] = dst1D(np.real(a[1]))
+        b.u[2] = dst1D(np.real(a[2]))
 
     return b
 
@@ -317,9 +326,15 @@ def idst(a):
     b.core = a.core
     b.r = a.r
     b.n = a.n
-    b.u[0] = idst1D(np.real(a[0])) + 1j * idst1D(np.imag(a[0]))
-    b.u[1] = idst1D(np.real(a[1])) + 1j * idst1D(np.imag(a[1]))
-    b.u[2] = idst1D(np.real(a[2])) + 1j * idst1D(np.imag(a[2]))
+    if type(np.imag(a[0][0,0])) is np.complex128:
+        b.u[0] = idst1D(np.real(a[0])) + 1j * idst1D(np.imag(a[0]))
+        b.u[1] = idst1D(np.real(a[1])) + 1j * idst1D(np.imag(a[1]))
+        b.u[2] = idst1D(np.real(a[2])) + 1j * idst1D(np.imag(a[2]))
+    
+    else:
+        b.u[0] = idst1D(np.real(a[0]))
+        b.u[1] = idst1D(np.real(a[1]))
+        b.u[2] = idst1D(np.real(a[2]))
 
     return b
 
