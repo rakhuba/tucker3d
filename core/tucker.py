@@ -77,7 +77,13 @@ class tensor:
         c.u[0] = np.concatenate((self.u[0], other.u[0]), axis = 1)
         c.u[1] = np.concatenate((self.u[1], other.u[1]), axis = 1)
         c.u[2] = np.concatenate((self.u[2], other.u[2]), axis = 1)
-        c.core = np.zeros(c.r, dtype=np.complex128)
+        
+        if type(self.u[0][0,0]*other.u[0][0,0]) is np.complex128:
+            dtype = np.complex128
+        else:
+            dtype = np.float64
+                
+        c.core = np.zeros(c.r, dtype=dtype)
         c.core[:self.r[0], :self.r[1], :self.r[2]] = self.core
         c.core[self.r[0]:, self.r[1]:, self.r[2]:] = other.core
 
@@ -340,25 +346,25 @@ def H(A):
     return np.transpose(np.conjugate(A))
 
 
-def ones((n1, n2, n3)):
+def ones((n1, n2, n3), dtype = np.float64):
     a = tensor()
     
-    a.u[0] = np.ones((n1, 1), dtype = np.complex128)
-    a.u[1] = np.ones((n2, 1), dtype = np.complex128)
-    a.u[2] = np.ones((n3, 1), dtype = np.complex128)
-    a.core = np.ones((1, 1, 1), dtype = np.complex128)
+    a.u[0] = np.ones((n1, 1), dtype = dtype)
+    a.u[1] = np.ones((n2, 1), dtype = dtype)
+    a.u[2] = np.ones((n3, 1), dtype = dtype)
+    a.core = np.ones((1, 1, 1), dtype = dtype)
     a.r = (1, 1, 1)
     a.n = (n1, n2, n3)
     
     return a
 
-def zeros((n1, n2, n3)):
+def zeros((n1, n2, n3), dtype = np.float64):
     a = tensor()
     
-    a.u[0] = np.zeros((n1, 1), dtype = np.complex128)
-    a.u[1] = np.zeros((n2, 1), dtype = np.complex128)
-    a.u[2] = np.zeros((n3, 1), dtype = np.complex128)
-    a.core = np.ones((1, 1, 1), dtype = np.complex128)
+    a.u[0] = np.zeros((n1, 1), dtype = dtype)
+    a.u[1] = np.zeros((n2, 1), dtype = dtype)
+    a.u[2] = np.zeros((n3, 1), dtype = dtype)
+    a.core = np.ones((1, 1, 1), dtype = dtype)
     a.r = (1, 1, 1)
     a.n = (n1, n2, n3)
     

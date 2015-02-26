@@ -47,6 +47,17 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     n = X[0].n
     N = int((min(n)+1)/2)
 
+    # Type check
+    list = [X[i].u[0] for i in xrange(len(X))]
+    if type(np.sum(list)) is np.complex128:
+        dtype = np.complex128
+    else:
+        dtype = np.float64
+
+    if pr <> None:
+        print 'data type is', dtype
+
+    # if there is initial guess
     if y0 <> None:
 ############################################################
 ############################################################
@@ -94,7 +105,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         A3_11 = A3[column_order_U3, :]
 
 
-        u1 = np.zeros((n[0], r0[0]), dtype=np.complex128)
+        u1 = np.zeros((n[0], r0[0]), dtype=dtype)
         for i in xrange(r0[0]):
             for alpha in xrange(d):
                 k1_order, j1_order = mod(column_order_U1[i], r0[1])
@@ -105,7 +116,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
             u1[:,i] = fun(A)
 
 
-        u2 = np.zeros((n[1], r0[1]), dtype=np.complex128)
+        u2 = np.zeros((n[1], r0[1]), dtype=dtype)
         for j in xrange(r0[1]):
             for alpha in xrange(d):
                 k1_order, i1_order = mod(column_order_U2[j], r0[0])
@@ -116,7 +127,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
             u2[:,j] = fun(A)
 
 
-        u3 = np.zeros((n[2], r0[2]), dtype=np.complex128)
+        u3 = np.zeros((n[2], r0[2]), dtype=dtype)
         for k in xrange(r0[2]):
             for alpha in xrange(d):
                 j1_order, i1_order = mod(column_order_U3[k], r0[0])
@@ -134,11 +145,11 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     
     
     
-        GG = np.zeros(r, dtype=np.complex128)
+        GG = np.zeros(r, dtype=dtype)
     
-        u1 = np.zeros((n[0], r_add[0]), dtype=np.complex128)
-        u2 = np.zeros((n[1], r_add[1]), dtype=np.complex128)
-        u3 = np.zeros((n[2], r_add[2]), dtype=np.complex128)
+        u1 = np.zeros((n[0], r_add[0]), dtype=dtype)
+        u2 = np.zeros((n[1], r_add[1]), dtype=dtype)
+        u3 = np.zeros((n[2], r_add[2]), dtype=dtype)
     
         u1[:N,:] = np.random.random((N,r_add[0]))
         u2[:N,:] = np.random.random((N,r_add[1]))
@@ -208,7 +219,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
     U2 = np.concatenate((U2, u2), 1)
     U3 = np.concatenate((U3, u3), 1)
 
-    A1_12 = np.zeros((r0[0], r_add[0]),dtype=np.complex128)
+    A1_12 = np.zeros((r0[0], r_add[0]),dtype=dtype)
     for ii in xrange(r0[0]):
         for alpha in xrange(d):
             k1_order, j1_order = mod(column_order_U1[ii], r0[1])
@@ -219,7 +230,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         A1_12[ii,:] = fun(A)
 
 
-    A2_12 = np.zeros((r0[1], r_add[1]),dtype=np.complex128)
+    A2_12 = np.zeros((r0[1], r_add[1]),dtype=dtype)
     for ii in xrange(r0[1]):
         for alpha in xrange(d):
             k1_order, i1_order = mod(column_order_U2[ii], r0[0])
@@ -230,7 +241,7 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         A2_12[ii, :] = fun(A)
 
 
-    A3_12 = np.zeros((r0[2], r_add[2]),dtype=np.complex128)
+    A3_12 = np.zeros((r0[2], r_add[2]),dtype=dtype)
     for ii in xrange(r0[2]):
         for alpha in xrange(d):
             j1_order, i1_order = mod(column_order_U3[ii], r0[0])
@@ -278,23 +289,23 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
         
         A1 = np.reshape(Ar, [r[0],-1], order='f')
         A1 = np.transpose(A1)
-        column_order_update_U1 = tuck.mv.maxvol( schur_comp(A1, A1_11, A1_12) )
+        column_order_update_U1 = tuck.mv.maxvol( schur_comp(A1, A1_11, A1_12, dtype) )
         r_add[0] = len(column_order_update_U1)
         
         A2 = np.reshape(np.transpose(Ar, [1,0,2]), [r[1],-1], order='f')
         A2 = np.transpose(A2)
-        column_order_update_U2 = tuck.mv.maxvol( schur_comp(A2, A2_11, A2_12) )
+        column_order_update_U2 = tuck.mv.maxvol( schur_comp(A2, A2_11, A2_12, dtype) )
         r_add[1] = len(column_order_update_U2)
         
         A3 = np.reshape(np.transpose(Ar, [2,0,1]), [r[2],-1], order='f')
         A3 = np.transpose(A3)
-        column_order_update_U3 = tuck.mv.maxvol( schur_comp(A3, A3_11, A3_12) )
+        column_order_update_U3 = tuck.mv.maxvol( schur_comp(A3, A3_11, A3_12, dtype) )
         r_add[2] = len(column_order_update_U3)
         
         
         
-        u1_approx = np.zeros((n[0], r_add[0]), dtype=np.complex128)
-        u1 = np.zeros((n[0], r_add[0]), dtype=np.complex128)
+        u1_approx = np.zeros((n[0], r_add[0]), dtype=dtype)
+        u1 = np.zeros((n[0], r_add[0]), dtype=dtype)
         for i in xrange(r_add[0]):
             for alpha in xrange(d):
                 k1_order, j1_order = mod(column_order_update_U1[i], r[1])
@@ -311,8 +322,8 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
             u1_approx[:,i] = u1_approx_i[:, 0, 0]
         
         
-        u2_approx = np.zeros((n[1], r_add[1]), dtype=np.complex128)
-        u2 = np.zeros((n[1], r_add[1]), dtype=np.complex128)
+        u2_approx = np.zeros((n[1], r_add[1]), dtype=dtype)
+        u2 = np.zeros((n[1], r_add[1]), dtype=dtype)
         for j in xrange(r_add[1]):
             for alpha in xrange(d):
                 k1_order, i1_order = mod(column_order_update_U2[j], r[0])
@@ -327,8 +338,8 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
             u2_approx_j = np.tensordot(np.transpose(u2_approx_j,[0,2,1]),np.transpose(UU2), (2, 0))
             u2_approx[:,j] = u2_approx_j[0, 0, :]
         
-        u3_approx = np.zeros((n[2], r_add[2]), dtype=np.complex128)
-        u3 = np.zeros((n[2], r_add[2]), dtype=np.complex128)
+        u3_approx = np.zeros((n[2], r_add[2]), dtype=dtype)
+        u3 = np.zeros((n[2], r_add[2]), dtype=dtype)
         for k in xrange(r_add[2]):
             for alpha in xrange(d):
                 j1_order, i1_order = mod(column_order_update_U3[k], r[0])
@@ -411,12 +422,12 @@ def multifun(X, delta_cross, fun, r_add = 4, y0 = None, pr = None):
 
 
 
-def schur_comp(A, A11, A12):
+def schur_comp(A, A11, A12, dtype):
     r, r0 = A12.shape
     R = r + r0
     
     #print np.linalg.solve(A11.T, A[:,:r].T).T
-    S_hat = np.zeros((R,r0), dtype=np.complex128)
+    S_hat = np.zeros((R,r0), dtype=dtype)
     
     S_hat[:r, :] = np.dot(pinv(A11), -A12)#np.linalg.solve(A11, -A12)
     S_hat[r:, :] = np.identity(r0)
@@ -434,7 +445,7 @@ def schur_comp(A, A11, A12):
 def mod(X,Y):
     return int(X/Y), X%Y
 
-def maxvol_update(A, ind):
+def maxvol_update(A, ind, dtype):
     # finds new r0 good rows
     # [ A11 A12]
     # [ A21 A22] => S = A22 - A21 A11^(-1) A12
@@ -443,7 +454,7 @@ def maxvol_update(A, ind):
     r = len(ind)
     r0 = R - r
     
-    S_hat = np.zeros((R, r0),dtype=np.complex128)
+    S_hat = np.zeros((R, r0),dtype=dtype)
     
     S_hat[:r, :] = np.linalg.solve(A[ind, :r], -A[ind, r:])
     S_hat[r:, :] = np.identity(r0)
