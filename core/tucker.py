@@ -4,6 +4,7 @@ from math import pi
 import maxvol as mv
 import copy
 import mkl_fft
+import scipy.interpolate as interpolate
 
 def svd(A):
     try:
@@ -431,6 +432,25 @@ def mkl_ifft1d(a):
     b = np.zeros((n,m),dtype=np.complex128)
     for i in xrange(m):
         b[:,i] = mkl_fft.ifft(a[:,i]+0j)/n
+    return b
+
+
+def interp(a, x_old, x_new):
+    
+    b = copy.deepcopy(a)
+    n_new = len(x_new)
+    b.n = [n_new]*3
+    
+    b.u[0] = np.zeros((n_new, b.r[0]), dtype = type(a.u[0][0,0]))
+    b.u[1] = np.zeros((n_new, b.r[1]), dtype = type(a.u[1][0,0]))
+    b.u[2] = np.zeros((n_new, b.r[2]), dtype = type(a.u[2][0,0]))
+    
+    for i in xrange(a.r[0]):
+        for alpha in xrange(3):
+            temp = copy.copy(a.u[alpha][:, i])
+            tck = interpolate.splrep(x_old, temp, s=0)
+            b.u[alpha][:, i] = interpolate.splev(x_new, tck, der=0)
+    
     return b
 
 
