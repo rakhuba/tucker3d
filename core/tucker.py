@@ -445,8 +445,9 @@ def interp(a, x_old, x_new):
     b.u[1] = np.zeros((n_new, b.r[1]), dtype = type(a.u[1][0,0]))
     b.u[2] = np.zeros((n_new, b.r[2]), dtype = type(a.u[2][0,0]))
     
-    for i in xrange(a.r[0]):
-        for alpha in xrange(3):
+    
+    for alpha in xrange(3):
+        for i in xrange(a.r[alpha]):
             temp = copy.copy(a.u[alpha][:, i])
             tck = interpolate.splrep(x_old, temp, s=0)
             b.u[alpha][:, i] = interpolate.splev(x_new, tck, der=0)
