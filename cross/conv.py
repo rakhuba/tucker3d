@@ -82,9 +82,14 @@ def toepl2circ(T):
     U2 = T.u[1][1:, :]
     U3 = T.u[2][1:, :]
     
-    C.u[0][T.n[0] :, :] = U1[::-1, :]
-    C.u[1][T.n[1] :, :] = U2[::-1, :]
-    C.u[2][T.n[2] :, :] = U3[::-1, :]
+    C.u[0][T.n[0] + 1:, :] = U1[::-1, :]
+    C.u[1][T.n[1] + 1:, :] = U2[::-1, :]
+    C.u[2][T.n[2] + 1:, :] = U3[::-1, :]
+    
+    C.u[0][T.n[0], :] = T.u[0][0, :]
+    C.u[1][T.n[1], :] = T.u[1][0, :]
+    C.u[2][T.n[2], :] = T.u[2][0, :]
+    
 
     return C
 
@@ -102,7 +107,7 @@ def func_int(x, y, a):
 
 def pad(a):
     b = tuck.tensor()
-    b.n = [2*a.n[0] -1, 2*a.n[1] -1, 2*a.n[2] -1]
+    b.n = [2*a.n[0], 2*a.n[1], 2*a.n[2]]
     b.r = a.r
     b.u[0] = np.zeros((b.n[0], b.r[0]), dtype=np.complex128)
     b.u[1] = np.zeros((b.n[1], b.r[1]), dtype=np.complex128)
