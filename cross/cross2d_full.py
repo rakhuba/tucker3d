@@ -7,13 +7,13 @@ def pinv(A):
         return np.linalg.pinv(A)
     except: #LinAlgError
         try:
-            print "PINV failded"
+            print("PINV failded")
             return np.linalg.pinv(A + 1e-12*np.linalg.norm(A, 1))
         except:
-            print "PINV failded twice"
+            print("PINV failded twice")
             return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
 
-def cross2d_full(func, eps, r0 = 4, rmax = 100):
+def cross2d_full(func, eps, r0=4, rmax=100):
     
     
     #A = np.zeros((M1, M2), dtype = np.complex128)
@@ -29,8 +29,8 @@ def cross2d_full(func, eps, r0 = 4, rmax = 100):
     r1 = r1_0
     r2 = r2_0
     
-    U1 = np.zeros((M1, r1), dtype = np.complex128)
-    U2 = np.zeros((M2, r2), dtype = np.complex128)
+    U1 = np.zeros((M1, r1), dtype=np.complex128)
+    U2 = np.zeros((M2, r2), dtype=np.complex128)
     
     U1[:, :] = np.random.random((M1,r1))
     U2[:, :] = np.random.random((M2,r2))
@@ -40,11 +40,8 @@ def cross2d_full(func, eps, r0 = 4, rmax = 100):
     
     eps_cross = 1
     
-    
     row_order_U1 = tuck.mv.maxvol(U1)
     row_order_U2 = tuck.mv.maxvol(U2)
-    
-    
     
     u1 = func[:, row_order_U2]
     u2 = func[row_order_U1, :].T
@@ -61,25 +58,19 @@ def cross2d_full(func, eps, r0 = 4, rmax = 100):
     r1 = r1 + r1_0
     r2 = r2 + r2_0
     
-    
     while True:
-        
         
         row_order_U1 = np.concatenate((row_order_U1, ind_update_1))
         row_order_U2 = np.concatenate((row_order_U2, ind_update_2))
-        
-        
+
         Ar = func[row_order_U1, :][:, row_order_U2]
-        
-        
+
         u1 = func[:, ind_update_2]
         u2 = func[ind_update_1, :].T
         
         u1_approx = np.dot(np.dot(UU1, Ar), H(UU2[ind_update_2, :]))
         u2_approx = np.dot(np.dot(UU1[ind_update_1, :], Ar), H(UU2)).T
-        
-        
-        
+
         #A_appr = np.dot(np.dot(UU1, Ar), H(UU2))
         
         eps_cross = 1./2*(  np.linalg.norm(u1_approx - u1)/ np.linalg.norm(u1)  +  np.linalg.norm(u2_approx - u2)/ np.linalg.norm(u2))
@@ -88,7 +79,7 @@ def cross2d_full(func, eps, r0 = 4, rmax = 100):
         if eps_cross < eps:
             break
         if r1>rmax:
-            print 'Rank has exceeded rmax value'
+            print('Rank has exceeded rmax value')
             break
         
         

@@ -1,27 +1,11 @@
 import numpy as np
-import time
-from math import pi
-import maxvol as mv
 import copy
-#import mkl_fft
 import scipy.interpolate as interpolate
-
-def svd(A):
-    try:
-        return np.linalg.svd(A, full_matrices = False)
-    except: #LinAlgError
-        try:
-            print "SVD failded"
-            return np.linalg.svd(A + 1e-12*np.linalg.norm(A, 1), full_matrices = False)
-        except:
-            print "SVD failded twice"
-            return np.linalg.svd(A + 1e-8*np.linalg.norm(A, 1), full_matrices = False)
-
 
 
 class tensor:
 
-    def __init__(self, A = None, eps = 1e-14):
+    def __init__(self, A=None, eps=1e-14):
 
         if A is None:
             self.core = 0
@@ -33,7 +17,7 @@ class tensor:
         N1, N2, N3 = A.shape
 
         B1 = np.reshape(A, (N1, -1), order='F')
-        B2 = np.reshape(np.transpose(A, [1, 0, 2]), (N2, -1), order='F' )
+        B2 = np.reshape(np.transpose(A, [1, 0, 2]), (N2, -1), order='F')
         B3 = np.reshape(np.transpose(A, [2, 0, 1]), (N3, -1), order='F')
 
         U1, V1, r1 = svd_trunc(B1, eps)
@@ -61,7 +45,7 @@ class tensor:
         res = "This is a 3D tensor in the Tucker format with \n"
         r = self.r
         n = self.n
-        for i in xrange(3):
+        for i in range(3):
             res = res + ("r(%d)=%d, n(%d)=%d \n" % (i, r[i], i, n[i]))
 
         return res
@@ -75,9 +59,9 @@ class tensor:
         c = tensor()
         c.r = [self.r[0] + other.r[0], self.r[1] + other.r[1], self.r[2] + other.r[2] ]
         c.n = self.n
-        c.u[0] = np.concatenate((self.u[0], other.u[0]), axis = 1)
-        c.u[1] = np.concatenate((self.u[1], other.u[1]), axis = 1)
-        c.u[2] = np.concatenate((self.u[2], other.u[2]), axis = 1)
+        c.u[0] = np.concatenate((self.u[0], other.u[0]), axis=1)
+        c.u[1] = np.concatenate((self.u[1], other.u[1]), axis=1)
+        c.u[2] = np.concatenate((self.u[2], other.u[2]), axis=1)
 
         if type(self.core[0,0,0]*other.core[0,0,0]*self.u[0][0,0]*other.u[0][0,0]) is np.complex128:
             dtype = np.complex128
@@ -107,7 +91,6 @@ class tensor:
         sub = a + b
         return sub
 
-
     def full(self):
 
         A = np.tensordot(self.core, np.transpose(self.u[2]), (2,0))
@@ -127,7 +110,7 @@ def can2tuck(g, U1, U2, U3):
     n, r2 = U2.shape
     n, r3 = U3.shape
 
-    if r1<>r2 or r2<>r3 or r1<>r3:
+    if r1!=r2 or r2!=r3 or r1!=r3:
         raise Exception("Wrong factor sizes")
 
     r = r1
@@ -135,7 +118,7 @@ def can2tuck(g, U1, U2, U3):
         G = np.zeros((r, r, r), dtype = np.complex128)
     else:
         G = np.zeros((r, r, r), dtype = np.float64)
-    for i in xrange(r):
+    for i in range(r):
         G[i, i, i] = g[i]
 
     a.r = (r1, r2, r3)
@@ -157,9 +140,9 @@ def real(a): # doubled ranks!
     b.u[1] = np.concatenate((np.real(a.u[1]), np.imag(a.u[1])), 1)
     b.u[2] = np.concatenate((np.real(a.u[2]), np.imag(a.u[2])), 1)
 
-    R1 = np.zeros((2*a.r[0], a.r[0]), dtype = np.complex128)
-    R2 = np.zeros((2*a.r[1], a.r[1]), dtype = np.complex128)
-    R3 = np.zeros((2*a.r[2], a.r[2]), dtype = np.complex128)
+    R1 = np.zeros((2*a.r[0], a.r[0]), dtype=np.complex128)
+    R2 = np.zeros((2*a.r[1], a.r[1]), dtype=np.complex128)
+    R3 = np.zeros((2*a.r[2], a.r[2]), dtype=np.complex128)
 
     R1[:a.r[0], :] = np.identity(a.r[0])
     R1[a.r[0]:, :] = 1j*np.identity(a.r[0])
@@ -215,7 +198,6 @@ def qr(a):
 def round(a, eps):
 
     a = qr(a)
-
     b = tensor()
     b.n = a.n
     core = tensor(a.core, eps)
@@ -253,7 +235,8 @@ def dot(a, b):
     return sum(sum(sum(G)))
 
 def norm(a): # need correction
-    return np.sqrt(dot(a, a))
+    return np.sqrt(np.abs(dot(a, a)))
+
 
 def fft(a):
 
@@ -263,20 +246,12 @@ def fft(a):
     b.r = a.r
     b.n = a.n
 
-    # try:
-    #     b.u[0] = mkl_fft1d(a.u[0])
-    #     b.u[1] = mkl_fft1d(a.u[1])
-    #     b.u[2] = mkl_fft1d(a.u[2])
-    #
-    # except:
-    #     print 'Standard np.fft.fft operation. May be slow if it is not from mkl'
-    b.u[0] = np.fft.fft(a[0], axis = 0)
-    b.u[1] = np.fft.fft(a[1], axis = 0)
-    b.u[2] = np.fft.fft(a[2], axis = 0)
-
-
+    b.u[0] = np.fft.fft(a[0], axis=0)
+    b.u[1] = np.fft.fft(a[1], axis=0)
+    b.u[2] = np.fft.fft(a[2], axis=0)
 
     return b
+
 
 def ifft(a):
 
@@ -293,9 +268,9 @@ def ifft(a):
     #
     # except:
     #     print 'Standard np.fft.fft operation. May be slow if it is not from mkl'
-    b.u[0] = np.fft.ifft(a[0], axis = 0)
-    b.u[1] = np.fft.ifft(a[1], axis = 0)
-    b.u[2] = np.fft.ifft(a[2], axis = 0)
+    b.u[0] = np.fft.ifft(a[0], axis=0)
+    b.u[1] = np.fft.ifft(a[1], axis=0)
+    b.u[2] = np.fft.ifft(a[2], axis=0)
 
 
 
@@ -347,7 +322,7 @@ def svd_trunc(A, eps = 1e-14):
 
     eps_svd = eps*s[0]/np.sqrt(3)
     r = min(N1, N2)
-    for i in xrange(min(N1, N2)):
+    for i in range(min(N1, N2)):
         if s[i] <= eps_svd:
             r = i
             break
@@ -362,27 +337,27 @@ def H(A):
     return np.transpose(np.conjugate(A))
 
 
-def ones((n1, n2, n3), dtype = np.float64):
+def ones(n, dtype = np.float64):
     a = tensor()
 
-    a.u[0] = np.ones((n1, 1), dtype = dtype)
-    a.u[1] = np.ones((n2, 1), dtype = dtype)
-    a.u[2] = np.ones((n3, 1), dtype = dtype)
-    a.core = np.ones((1, 1, 1), dtype = dtype)
+    a.u[0] = np.ones((n[0], 1), dtype=dtype)
+    a.u[1] = np.ones((n[1], 1), dtype=dtype)
+    a.u[2] = np.ones((n[2], 1), dtype=dtype)
+    a.core = np.ones((1, 1, 1), dtype=dtype)
     a.r = (1, 1, 1)
-    a.n = (n1, n2, n3)
+    a.n = n
 
     return a
 
-def zeros((n1, n2, n3), dtype = np.float64):
+def zeros(n, dtype=np.float64):
     a = tensor()
 
-    a.u[0] = np.zeros((n1, 1), dtype = dtype)
-    a.u[1] = np.zeros((n2, 1), dtype = dtype)
-    a.u[2] = np.zeros((n3, 1), dtype = dtype)
-    a.core = np.ones((1, 1, 1), dtype = dtype)
+    a.u[0] = np.zeros((n[0], 1), dtype=dtype)
+    a.u[1] = np.zeros((n[1], 1), dtype=dtype)
+    a.u[2] = np.zeros((n[2], 1), dtype=dtype)
+    a.core = np.ones((1, 1, 1), dtype=dtype)
     a.r = (1, 1, 1)
-    a.n = (n1, n2, n3)
+    a.n = n
 
     return a
 
@@ -392,7 +367,7 @@ def dst1D(A):
     n = np.array(A.shape)
     new_size = n.copy()
     new_size[0] = 2*(n[0]+1)
-    X = np.zeros(new_size, dtype = np.complex128)
+    X = np.zeros(new_size, dtype=np.complex128)
 
     X[1: n[0] + 1, :] = A
     X = np.imag(np.fft.fft(X, axis=0))
@@ -422,7 +397,7 @@ def mkl_fft1d(a):
 
     n,m = a.shape
     b = np.zeros((n,m),dtype=np.complex128)
-    for i in xrange(m):
+    for i in range(m):
         b[:,i] = np.fft.fft(a[:,i]+0j, axis=0)
     return b
 
@@ -430,7 +405,7 @@ def mkl_ifft1d(a):
 
     n,m = a.shape
     b = np.zeros((n,m),dtype=np.complex128)
-    for i in xrange(m):
+    for i in range(m):
         b[:,i] = np.fft.ifft(a[:,i]+0j, axis=0)/n
     return b
 
@@ -446,10 +421,22 @@ def interp(a, x_old, x_new):
     b.u[2] = np.zeros((n_new, b.r[2]), dtype = type(a.u[2][0,0]))
 
 
-    for alpha in xrange(3):
-        for i in xrange(a.r[alpha]):
+    for alpha in range(3):
+        for i in range(a.r[alpha]):
             temp = copy.copy(a.u[alpha][:, i])
             tck = interpolate.splrep(x_old, temp, s=0)
             b.u[alpha][:, i] = interpolate.splev(x_new, tck, der=0)
 
     return b
+
+
+def svd(A):
+    try:
+        return np.linalg.svd(A, full_matrices=False)
+    except: #LinAlgError
+        try:
+            print("SVD failded")
+            return np.linalg.svd(A + 1e-12*np.linalg.norm(A, 1), full_matrices=False)
+        except:
+            print("SVD failded twice")
+            return np.linalg.svd(A + 1e-8*np.linalg.norm(A, 1), full_matrices=False)

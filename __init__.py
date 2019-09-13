@@ -1,2 +1,2 @@
-from core import *
-import cross
+from .core import *
+import tucker3d.cross

@@ -6,20 +6,6 @@ from scipy.special import erf
 import tucker3d as tuck
 
 
-def pinv(A):
-    try:
-        return np.linalg.pinv(A)
-    except: #LinAlgError
-        try:
-            print "PINV failded"
-            return np.linalg.pinv(A + 1e-12*np.linalg.norm(A, 1))
-        except:
-            print "PINV failded twice"
-            return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))
-
-
-#from numba import autojit
-#@autojit
 def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     
     # For X = [X_1,...,X_d], where X_i - tensors in the Tucker format
@@ -38,8 +24,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
 
     eps_cross = 1
     
-    if pr <> None:
-        print 'cross multifun... \n'
+    if pr != None:
+        print('cross multifun... \n')
     
     r = copy.copy(r_add)
 
@@ -48,20 +34,17 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     N = int((min(n)+1)/2)
 
     # Type check
-    list = [X[i].u[0][0,0] for i in xrange(len(X))]
+    list = [X[i].u[0][0,0] for i in range(len(X))]
     if type(np.sum(list)) is np.complex128:
         dtype = np.complex128
     else:
         dtype = np.float64
 
-    if pr <> None:
-        print 'data type is', dtype
+    if pr != None:
+        print('data type is', dtype)
 
     # if there is initial guess
-    if y0 <> None:
-############################################################
-############################################################
-############################################################
+    if y0 != None:
 
         Q1, R = np.linalg.qr(y0.u[0]);
         row_order_U1 = np.sort(tuck.mv.maxvol(Q1));
@@ -75,7 +58,7 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         A = [None]*d
 
 
-        for alpha in xrange(d):
+        for alpha in range(d):
             A[alpha] = np.tensordot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3,:]), (2, 0))
             A[alpha] = np.tensordot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].u[1][row_order_U2,:]), (2, 0))
             A[alpha] = np.tensordot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[0][row_order_U1,:]), (2, 0))
@@ -106,8 +89,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
 
 
         u1 = np.zeros((n[0], r0[0]), dtype=dtype)
-        for i in xrange(r0[0]):
-            for alpha in xrange(d):
+        for i in range(r0[0]):
+            for alpha in range(d):
                 k1_order, j1_order = mod(column_order_U1[i], r0[1])
                 A[alpha] = np.dot(X[alpha].core,np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
                 A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
@@ -117,8 +100,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
 
 
         u2 = np.zeros((n[1], r0[1]), dtype=dtype)
-        for j in xrange(r0[1]):
-            for alpha in xrange(d):
+        for j in range(r0[1]):
+            for alpha in range(d):
                 k1_order, i1_order = mod(column_order_U2[j], r0[0])
                 A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
                 A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
@@ -128,8 +111,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
 
 
         u3 = np.zeros((n[2], r0[2]), dtype=dtype)
-        for k in xrange(r0[2]):
-            for alpha in xrange(d):
+        for k in range(r0[2]):
+            for alpha in range(d):
                 j1_order, i1_order = mod(column_order_U3[k], r0[0])
                 A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
                 A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
@@ -168,7 +151,7 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         
         A = [None]*d
 
-        for alpha in xrange(d):
+        for alpha in range(d):
             A[alpha] = np.tensordot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3,:]), (2, 0))
             A[alpha] = np.tensordot(np.transpose(A[alpha], [2,0,1]), np.transpose(X[alpha].u[1][row_order_U2,:]), (2, 0))
             A[alpha] = np.tensordot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[0][row_order_U1,:]), (2, 0))
@@ -220,8 +203,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     U3 = np.concatenate((U3, u3), 1)
 
     A1_12 = np.zeros((r0[0], r_add[0]),dtype=dtype)
-    for ii in xrange(r0[0]):
-        for alpha in xrange(d):
+    for ii in range(r0[0]):
+        for alpha in range(d):
             k1_order, j1_order = mod(column_order_U1[ii], r0[1])
             A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
@@ -231,8 +214,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
 
 
     A2_12 = np.zeros((r0[1], r_add[1]),dtype=dtype)
-    for ii in xrange(r0[1]):
-        for alpha in xrange(d):
+    for ii in range(r0[1]):
+        for alpha in range(d):
             k1_order, i1_order = mod(column_order_U2[ii], r0[0])
             A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
@@ -242,8 +225,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
 
 
     A3_12 = np.zeros((r0[2], r_add[2]),dtype=dtype)
-    for ii in xrange(r0[2]):
-        for alpha in xrange(d):
+    for ii in range(r0[2]):
+        for alpha in range(d):
             j1_order, i1_order = mod(column_order_U3[ii], r0[0])
             A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
@@ -259,7 +242,7 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     
     while True:
         
-        for alpha in xrange(d):
+        for alpha in range(d):
             A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]), np.transpose(X[alpha].u[0][ind_update_1,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[1][row_order_U2,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [1,2,0]), np.transpose(X[alpha].u[2][row_order_U3,:]))
@@ -267,7 +250,7 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         
         row_order_U1 = np.concatenate((row_order_U1, ind_update_1))
         
-        for alpha in xrange(d):
+        for alpha in range(d):
             A[alpha] = np.dot(np.transpose(X[alpha].core, [0,2,1]), np.transpose(X[alpha].u[1][ind_update_2,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]), np.transpose(X[alpha].u[2][row_order_U3,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].u[0][row_order_U1,:]))
@@ -276,7 +259,7 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         
         row_order_U2 = np.concatenate((row_order_U2, ind_update_2))
         
-        for alpha in xrange(d):
+        for alpha in range(d):
             A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][ind_update_3,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].u[1][row_order_U2,:]))
             A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[0][row_order_U1,:]))
@@ -306,8 +289,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         
         u1_approx = np.zeros((n[0], r_add[0]), dtype=dtype)
         u1 = np.zeros((n[0], r_add[0]), dtype=dtype)
-        for i in xrange(r_add[0]):
-            for alpha in xrange(d):
+        for i in range(r_add[0]):
+            for alpha in range(d):
                 k1_order, j1_order = mod(column_order_update_U1[i], r[1])
                 A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
                 A[alpha] = np.dot(np.transpose(A[alpha], [2,0,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
@@ -324,8 +307,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         
         u2_approx = np.zeros((n[1], r_add[1]), dtype=dtype)
         u2 = np.zeros((n[1], r_add[1]), dtype=dtype)
-        for j in xrange(r_add[1]):
-            for alpha in xrange(d):
+        for j in range(r_add[1]):
+            for alpha in range(d):
                 k1_order, i1_order = mod(column_order_update_U2[j], r[0])
                 A[alpha] = np.dot(X[alpha].core, np.transpose(X[alpha].u[2][row_order_U3[k1_order]:row_order_U3[k1_order]+1,:]))
                 A[alpha] = np.dot(np.transpose(A[alpha], [2,1,0]), np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
@@ -340,8 +323,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         
         u3_approx = np.zeros((n[2], r_add[2]), dtype=dtype)
         u3 = np.zeros((n[2], r_add[2]), dtype=dtype)
-        for k in xrange(r_add[2]):
-            for alpha in xrange(d):
+        for k in range(r_add[2]):
+            for alpha in range(d):
                 j1_order, i1_order = mod(column_order_update_U3[k], r[0])
                 A[alpha] = np.dot(np.transpose(X[alpha].core, [2,1,0]),np.transpose(X[alpha].u[0][row_order_U1[i1_order]:row_order_U1[i1_order]+1,:]))
                 A[alpha] = np.dot(np.transpose(A[alpha], [0,2,1]),np.transpose(X[alpha].u[1][row_order_U2[j1_order]:row_order_U2[j1_order]+1,:]))
@@ -357,13 +340,13 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
         eps_cross = 1./3*(  np.linalg.norm(u1_approx - u1)/ np.linalg.norm(u1) +
                           np.linalg.norm(u2_approx - u2)/ np.linalg.norm(u2) +
                           np.linalg.norm(u3_approx - u3)/ np.linalg.norm(u3)   )
-        if pr <> None:
-            print 'relative accuracy = %s' % (eps_cross), 'ranks = %s' % r
+        if pr != None:
+            print('relative accuracy = %s' % (eps_cross), 'ranks = %s' % r)
         
         if eps_cross < delta_cross:
             break
-        elif r[0]>rmax:
-            print 'Rank has exceeded rmax value'
+        elif r[0] > rmax:
+            print('Rank has exceeded rmax value')
             break
 
         #print np.linalg.norm( full(G, U1, U2, U3) - C_toch )/np.linalg.norm(C_toch)
@@ -409,8 +392,8 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     G = np.tensordot(GG,np.transpose(R3), (2, 0))
 
     G_Tucker = tuck.tensor(G, delta_cross)
-    if pr <> None:
-        print 'ranks after rounding = %s' % G_Tucker.r[0], G_Tucker.r[1], G_Tucker.r[2]
+    if pr != None:
+        print('ranks after rounding = %s' % G_Tucker.r[0], G_Tucker.r[1], G_Tucker.r[2])
     
     
     fun = tuck.tensor()
@@ -422,7 +405,6 @@ def multifun(X, delta_cross, fun, r_add=4, y0=None, rmax=100, pr=None):
     fun.n = n
 
     return fun
-
 
 
 def schur_comp(A, A11, A12, dtype):
@@ -445,8 +427,10 @@ def schur_comp(A, A11, A12, dtype):
     
     return Q
 
+
 def mod(X,Y):
     return int(X/Y), X%Y
+
 
 def maxvol_update(A, ind, dtype):
     # finds new r0 good rows
@@ -482,5 +466,18 @@ def column_update(UU, u, ind):
     
     return np.concatenate((U1, U2), 1), ind_add
 
+
 def H(A):
     return np.transpose(np.conjugate(A))
+
+
+def pinv(A):
+    try:
+        return np.linalg.pinv(A)
+    except: #LinAlgError
+        try:
+            print("PINV failded")
+            return np.linalg.pinv(A + 1e-12*np.linalg.norm(A, 1))
+        except:
+            print("PINV failded twice")
+            return np.linalg.pinv(A + 1e-8*np.linalg.norm(A, 1))

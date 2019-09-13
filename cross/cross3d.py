@@ -12,7 +12,6 @@ import tucker3d as tuck
 
 def cross3d(func, M, eps_init, delta_add = 1e-5):
 
-
     N = int((M+1)/2)
 
     r1 = 2
@@ -37,17 +36,15 @@ def cross3d(func, M, eps_init, delta_add = 1e-5):
 
     while True:
 
-
         row_order_U1 = tuck.mv.maxvol(U1)
         row_order_U2 = tuck.mv.maxvol(U2)
         row_order_U3 = tuck.mv.maxvol(U3)
 
-
         Ar = np.zeros((r1,r2,r3),dtype=np.complex128)
 
-        for i in xrange(r1):
-            for j in xrange(r2):
-                for k in xrange(r3):
+        for i in range(r1):
+            for j in range(r2):
+                for k in range(r3):
                     Ar[i,j,k] = func((row_order_U1[i],row_order_U2[j],row_order_U3[k]))
 
 
@@ -71,7 +68,6 @@ def cross3d(func, M, eps_init, delta_add = 1e-5):
     #print 'relative accuracy = %s' % (eps_cross), 'ranks = %s' % r1, r2, r3
         G_Tucker = tuck.tensor(G, eps_init/10)
 
-
         G = G_Tucker.core
 
         U1 = np.dot(U1, G_Tucker.u[0])
@@ -90,9 +86,9 @@ def cross3d(func, M, eps_init, delta_add = 1e-5):
 
         Ar = np.zeros((r1,r2,r3),dtype=np.complex128)
 
-        for i in xrange(r1):
-            for j in xrange(r2):
-                for k in xrange(r3):
+        for i in range(r1):
+            for j in range(r2):
+                for k in range(r3):
                     Ar[i, j, k] = func((row_order_U1[i], row_order_U2[j], row_order_U3[k]))
 
 
@@ -115,20 +111,20 @@ def cross3d(func, M, eps_init, delta_add = 1e-5):
 
 
         u1 = np.zeros((M, r1), dtype=np.complex128)
-        for i in xrange(r1):
-            for ii in xrange(M):
+        for i in range(r1):
+            for ii in range(M):
                 k1_order, j1_order = mod(column_order_U1[i], r2)
                 u1[ii,i] = func((ii, row_order_U2[j1_order], row_order_U3[k1_order]))
 
         u2 = np.zeros((M, r2), dtype=np.complex128)
-        for j in xrange(r2):
-            for jj in xrange(M):
+        for j in range(r2):
+            for jj in range(M):
                 k1_order, i1_order = mod(column_order_U2[j], r1)
                 u2[jj,j] = func((row_order_U1[i1_order], jj, row_order_U3[k1_order]))
 
         u3 = np.zeros((M, r3), dtype=np.complex128)
-        for k in xrange(r3):
-            for kk in xrange(M):
+        for k in range(r3):
+            for kk in range(M):
                 j1_order, i1_order = mod(column_order_U3[k], r1)
                 u3[kk,k] = func((row_order_U1[i1_order], row_order_U2[j1_order], kk))
 
@@ -200,7 +196,7 @@ def round_matrix(A, eps):
     
     eps_svd = eps*s[0]/np.sqrt(3)
     r = min(N1, N2)
-    for i in xrange(min(N1, N2)):
+    for i in range(min(N1, N2)):
         if s[i] <= eps_svd:
             r = i
             break
