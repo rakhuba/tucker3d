@@ -39,23 +39,15 @@ class tensor:
     def __getitem__(self, index):
         return [self.u[0], self.u[1], self.u[2], self.core][index]
 
-
     def __repr__(self):
-
         res = "This is a 3D tensor in the Tucker format with \n"
         r = self.r
         n = self.n
         for i in range(3):
             res = res + ("r(%d)=%d, n(%d)=%d \n" % (i, r[i], i, n[i]))
-
         return res
 
     def __add__(self, other):
-
-        #if self.n != other.n:
-        #print self.n, other.n
-        #  raise Exception('mode sizes must agree')
-
         c = tensor()
         c.r = [self.r[0] + other.r[0], self.r[1] + other.r[1], self.r[2] + other.r[2] ]
         c.n = self.n
@@ -71,10 +63,18 @@ class tensor:
         c.core = np.zeros(c.r, dtype=dtype)
         c.core[:self.r[0], :self.r[1], :self.r[2]] = self.core
         c.core[self.r[0]:, self.r[1]:, self.r[2]:] = other.core
-
         return c
+    
+    def __mul__(self, other):
+        mult = tensor()
+        mult.n = self.n
+        mult.core = np.kron(self.core, other.core)
+        mult.r = mult.core.shape
+        for i in range(3):
+            mult.u[i] = np.einsum('nk,nl->nkl', self.u[i], other.u[i]).reshape(self.u[i].shape[0], -1)
+        return mult
 
-    def __rmul__(self, const): # only scalar by tensor product!
+    def __rmul__(self, const): # only a scalar by a tensor product!
         mult = copy.copy(self)
         mult.core = const * self.core
         return mult
@@ -92,14 +92,12 @@ class tensor:
         return sub
 
     def full(self):
-
         A = np.tensordot(self.core, np.transpose(self.u[2]), (2,0))
         A = np.transpose(A, [2,0,1])
         A = np.tensordot(A, np.transpose(self.u[1]), (2,0))
         A = np.transpose(A, [0,2,1])
         A = np.tensordot(A, np.transpose(self.u[0]), (2,0))
         A = np.transpose(A, [2,1,0])
-
         return A
 
 def can2tuck(g, U1, U2, U3):
