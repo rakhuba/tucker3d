@@ -99,7 +99,27 @@ class tensor:
         A = np.tensordot(A, np.transpose(self.u[0]), (2,0))
         A = np.transpose(A, [2,1,0])
         return A
-
+    
+    def round(a, eps):
+        a = qr(a)
+        b = tensor()
+        b.n = a.n
+        core = tensor(a.core, eps)
+        b.core = core.core
+        b.r = b.core.shape
+        b.u[0] = np.dot(a.u[0], core.u[0])
+        b.u[1] = np.dot(a.u[1], core.u[1])
+        b.u[2] = np.dot(a.u[2], core.u[2])
+        return b
+    
+    def norm(a):
+        q = qr(a)
+        return np.linalg.norm(q.core)
+    
+    
+def round(a, eps):
+    return a.round(eps)
+    
 def can2tuck(g, U1, U2, U3):
 
     a = tensor()
@@ -159,7 +179,7 @@ def real(a): # doubled ranks!
 
     return b
 
-def full(a, ind = None):
+def full(a, ind=None):
     if ind == None:
         return a.full()
     else:
@@ -193,20 +213,6 @@ def qr(a):
 
     return b
 
-def round(a, eps):
-
-    a = qr(a)
-    b = tensor()
-    b.n = a.n
-    core = tensor(a.core, eps)
-    b.core = core.core
-    b.r = b.core.shape
-    b.u[0] = np.dot(a.u[0], core.u[0])
-    b.u[1] = np.dot(a.u[1], core.u[1])
-    b.u[2] = np.dot(a.u[2], core.u[2])
-
-    return b
-
 def conj(a):
     b = copy.copy(a)
     b.u[0] = np.conjugate(a.u[0])
@@ -232,8 +238,8 @@ def dot(a, b):
     G = np.conjugate(a.core) * G
     return sum(sum(sum(G)))
 
-def norm(a): # need correction
-    return np.sqrt(np.abs(dot(a, a)))
+def norm(a):
+    return a.norm()
 
 
 def fft(a):
